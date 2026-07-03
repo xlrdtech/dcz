@@ -62,7 +62,7 @@
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   ::selection{background:var(--rose);color:#1a0f0a}
   html{scroll-behavior:smooth}
-  body{background:var(--black);color:var(--ice);font-family:var(--sans);font-weight:300;line-height:1.6;overflow-x:clip}
+  body{background:var(--black);color:var(--ice);font-family:var(--sans);font-weight:300;line-height:1.6;overflow-x:clip;overflow-y:clip}
   a{color:var(--rose-hi);text-decoration:none}
 
   .env{position:fixed;inset:0;z-index:-1;background:
@@ -106,12 +106,12 @@
      One vertical stack: medallion → wordmark → tagline → sub → CTAs.
      Mobile-first: every size in clamp() so it fits a 390px iPhone above the fold and
      scales up cleanly. Obsidian/navy stage, rose-gold gradient wordmark, glass CTAs. */
-  header.intro{position:relative;text-align:center;
+  header.intro{position:relative;text-align:center;overflow:clip;
     padding:clamp(10px,2.4vw,22px) 20px clamp(40px,7vw,72px);
     display:flex;flex-direction:column;align-items:center}
   /* a soft rose-gold halo behind the whole hero so the medallion + wordmark read as one stage */
   header.intro::before{content:"";position:absolute;left:50%;top:-2%;transform:translateX(-50%);
-    width:min(120vw,860px);height:min(78vh,640px);z-index:-1;pointer-events:none;
+    width:min(120%,860px);height:min(78vh,640px);z-index:-1;pointer-events:none;
     background:radial-gradient(ellipse 60% 52% at 50% 38%, rgba(215,160,138,.16), transparent 66%),
       radial-gradient(ellipse 58% 60% at 50% 30%, rgba(19,37,78,.42), transparent 72%);
     filter:blur(2px)}
@@ -423,7 +423,7 @@
   /* Solid pure-black backdrop behind the loader video the entire time it plays. */
   #siteLoader{position:fixed;inset:0;z-index:9999;background:#000;
     display:flex;align-items:center;justify-content:center;opacity:1}
-  #siteLoader video{width:100vw;height:auto;max-height:100vh;object-fit:contain;background:#000}
+  #siteLoader video{width:100%;height:auto;max-height:100vh;object-fit:contain;background:#000}
   /* CINEMATIC GLITCH exit: RGB channel-split shimmer builds into two controlled
      displacement kicks, then dissolves smoothly with scale + fade. Smooth easing,
      not hard steps -> reads as an intentional digital dissolve, not chaos. */
