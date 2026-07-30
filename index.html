@@ -1255,10 +1255,24 @@
       if(rank === -1){ x.s.hidden = true; x.s.style.display = 'none'; return; }
       x.s.hidden = false;
       x.s.style.order = rank;
-      // keep the announced position honest now that the visible count changed
-      var lab = x.s.getAttribute('aria-label') || '';
-      var rest = lab.replace(/^Show\s+\d+\s+of\s+\d+/, '');
-      x.s.setAttribute('aria-label', 'Show ' + (rank+1) + ' of ' + keep.length + rest);
+      // Rebuild the whole announced label from the SAME nodes /edit/ writes (title/date/year),
+      // not from the hardcoded attribute. Scraping the attribute preserved whatever name was
+      // baked into the HTML, so renaming a show in content.json left screen readers announcing
+      // the OLD name forever while every sighted visitor saw the new one.
+      var t  = x.s.querySelector('[data-ed$="-title"]');
+      var mo = x.s.querySelector('[data-ed$="-date"]');
+      var yr = x.s.querySelector('[data-ed$="-year"]');
+      var pos = 'Show ' + (rank+1) + ' of ' + keep.length;
+      var name = t ? (t.textContent || '').trim() : '';
+      var when = [mo && (mo.textContent||'').trim(), yr && (yr.textContent||'').trim()]
+                   .filter(Boolean).join(' ');
+      if (name || when) {
+        x.s.setAttribute('aria-label', pos + ': ' + [name, when].filter(Boolean).join(', '));
+      } else {
+        // no readable title/date — keep the position honest, leave the rest as authored
+        var lab = x.s.getAttribute('aria-label') || '';
+        x.s.setAttribute('aria-label', pos + lab.replace(/^Show\s+\d+\s+of\s+\d+/, ''));
+      }
     });
     slides = keep.map(function(x){ return x.s; });
   }
