@@ -1216,6 +1216,54 @@
   var root = document.getElementById('showsGallery'); if(!root) return;
   var track = document.getElementById('showsTrack'); if(!track) return;
   var slides = [].slice.call(track.querySelectorAll('.show')); if(!slides.length) return;
+
+  // ── DATE-AWARE ORDER (LaTina 2026-07-29: "I wonder why it does[n't] line up
+  // according to dates"). The heading promises "Upcoming Shows", but the carousel
+  // opened on Jul 10 — 19 days past — because slide order was DOM order.
+  // HARD CONSTRAINT: content.json overlays these slides POSITIONALLY (c.shows[i] ->
+  // showN), so the DOM order must NOT change or a paying client's show data gets
+  // reassigned. .shows-track is flex, so we reorder VISUALLY via CSS `order` and
+  // leave the DOM — and therefore the index mapping — byte-identical.
+  function orderByDate(){
+    var MON = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    var today = new Date(); today.setHours(0,0,0,0);
+    var meta = slides.map(function(s, i){
+      var mo = s.querySelector('[data-ed$="-date"]'), yr = s.querySelector('[data-ed$="-year"]');
+      var txt = mo ? (mo.textContent || '').trim() : '';
+      var year = yr ? parseInt(yr.textContent, 10) : NaN;
+      var m = txt.match(/^([A-Z][a-z]{2})\s+(\d{1,2})(?:\s*[-–]\s*(\d{1,2}))?/);
+      if(!m || !(m[1] in MON) || !year) return { s:s, i:i, start:null, end:null };
+      return {
+        s:s, i:i,
+        start: new Date(year, MON[m[1]], parseInt(m[2],10)),
+        // multi-day events are not over until their LAST day
+        end:   new Date(year, MON[m[1]], parseInt(m[3] || m[2],10))
+      };
+    });
+    var future = meta.filter(function(x){ return !x.end || x.end >= today; });
+    // if every show has passed, keep them all — an empty section is worse than a stale one
+    var keep = future.length ? future : meta;
+    keep.sort(function(a,b){ return (a.start ? a.start.getTime() : 0) - (b.start ? b.start.getTime() : 0); });
+    meta.forEach(function(x){
+      var rank = keep.indexOf(x);
+      if(rank === -1){ x.s.hidden = true; x.s.style.display = 'none'; return; }
+      x.s.hidden = false;
+      x.s.style.order = rank;
+      // keep the announced position honest now that the visible count changed
+      var lab = x.s.getAttribute('aria-label') || '';
+      var rest = lab.replace(/^Show\s+\d+\s+of\s+\d+/, '');
+      x.s.setAttribute('aria-label', 'Show ' + (rank+1) + ' of ' + keep.length + rest);
+    });
+    slides = keep.map(function(x){ return x.s; });
+  }
+  orderByDate();
+  // KNOWN LIMIT, deliberate: content.json is fetched async and lands AFTER this init, so
+  // if the client edits a DATE at /edit/ the new order applies on next load, not instantly.
+  // A re-sort on mutation was tried and dropped — `n` and the dots array are captured at
+  // init, so changing the visible count mid-flight can desync the carousel. A one-load-stale
+  // ORDER is a far smaller defect on a paying client's page than a broken carousel.
+  // Dates today come from the HTML and content.json's values match it, so this is inert.
+
   var prevBtn = root.querySelector('.gal-prev'), nextBtn = root.querySelector('.gal-next');
   var dotsWrap = root.querySelector('.gal-dots'), bar = root.querySelector('.gal-progress > i');
   var live = root.querySelector('.gal-live');
