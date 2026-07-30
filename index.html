@@ -455,6 +455,10 @@
   var loader=document.getElementById('siteLoader'), body=document.body;
   var vid=loader && loader.querySelector('video');
   var done=false, started=false;
+  // Loader plays at double speed. Browsers reset playbackRate when a source
+  // loads, so re-assert it rather than setting it once.
+  var RATE=2;
+  function setRate(){ try{ if(vid.playbackRate!==RATE) vid.playbackRate=RATE; }catch(e){} }
   function finish(){
     if(done) return; done=true;
     body.classList.remove('preload-active');
@@ -463,16 +467,19 @@
     setTimeout(function(){ if(loader.parentNode) loader.remove(); }, 1000);
   }
   if(!loader || !vid){ finish(); return; }
-  vid.addEventListener('playing', function(){ started=true; });
+  vid.addEventListener('loadedmetadata', setRate);
+  vid.addEventListener('playing', function(){ started=true; setRate(); });
   vid.addEventListener('ended', finish);
   vid.addEventListener('error', finish);
   // Kick playback (autoplay attr alone can be ignored). If it never starts within
   // 2.5s, the video is blocked/undecodable -> reveal the site rather than sit blank.
+  setRate();
   var p=vid.play();
   if(p && p.catch) p.catch(finish);
   setTimeout(function(){ if(!started) finish(); }, 2500);
-  // Absolute cap: even a playing clip can't hold the site hostage past 12s.
-  setTimeout(finish, 12000);
+  // Absolute cap: even a playing clip can't hold the site hostage. Scales with
+  // RATE so a stall can't cost the old full-speed wait.
+  setTimeout(finish, 12000/RATE);
 })();
 </script>
 
@@ -686,7 +693,7 @@
 
     <div class="shows-track" id="showsTrack" tabindex="0" aria-label="Upcoming shows, use left and right arrow keys to change show">
 
-      <article class="show is-active" aria-roledescription="slide" aria-label="Show 1 of 3: Country Black Trail Ride, July 10 2026">
+      <article class="show is-active" aria-roledescription="slide" aria-label="Show 1 of 5: Country Black Trail Ride, July 10 2026">
         <div class="poster">
           <a class="flyer" href="/assets/show-trailride-jul10.jpg" target="_blank" rel="noopener" aria-label="Open flyer in full size: Country Black Trail Ride, July 10 2026">
             <span class="flyer-bg" style="background-image:url('/assets/show-trailride-jul10.jpg')" aria-hidden="true"></span>
@@ -711,7 +718,7 @@
         </div>
       </article>
 
-      <article class="show" aria-roledescription="slide" aria-label="Show 2 of 3: 1st Annual TN to AL Trail Ride, August 29 2026">
+      <article class="show" aria-roledescription="slide" aria-label="Show 2 of 5: 1st Annual TN to AL Trail Ride, August 29 2026">
         <div class="poster">
           <a class="flyer" href="/assets/show-tnal-trailride-aug29.jpg" target="_blank" rel="noopener" aria-label="Open flyer in full size: 1st Annual TN to AL Trail Ride, August 29 2026">
             <span class="flyer-bg" style="background-image:url('/assets/show-tnal-trailride-aug29.jpg')" aria-hidden="true"></span>
@@ -736,7 +743,7 @@
         </div>
       </article>
 
-      <article class="show" aria-roledescription="slide" aria-label="Show 3 of 3: Big 3 ATL 4th of July Trail Ride &amp; Field Day, July 3-4 2026">
+      <article class="show" aria-roledescription="slide" aria-label="Show 3 of 5: Big 3 ATL 4th of July Trail Ride &amp; Field Day, July 3-4 2026">
         <div class="poster">
           <a class="flyer" href="/assets/show-big3atl-jul3-4.jpg" target="_blank" rel="noopener" aria-label="Open flyer in full size: Big 3 ATL 4th of July Trail Ride &amp; Field Day, July 3-4 2026">
             <span class="flyer-bg" style="background-image:url('/assets/show-big3atl-jul3-4.jpg')" aria-hidden="true"></span>
@@ -757,6 +764,56 @@
             <div class="btns">
               <button class="btn primary" data-book>Book Stal'lyon</button>
               <a class="btn ghost" href="https://big3summerbash.eventbrite.com" target="_blank" rel="noopener">Get Tickets</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="show" aria-roledescription="slide" aria-label="Show 4 of 5: Dukes &amp; Boots Concert, August 23 2026">
+        <div class="poster">
+          <a class="flyer" href="/assets/show-dukes-boots-aug23.jpg" target="_blank" rel="noopener" aria-label="Open flyer in full size: Dukes &amp; Boots Concert, August 23 2026">
+            <span class="flyer-bg" style="background-image:url('/assets/show-dukes-boots-aug23.jpg')" aria-hidden="true"></span>
+            <span class="date-chip" aria-hidden="true"><span class="d-mo" data-ed="show4-date">Aug 23</span><span class="d-yr" data-ed="show4-year">2026</span></span>
+            <img class="zoomable" src="/assets/show-dukes-boots-aug23.jpg" alt="Dukes &amp; Boots Concert featuring Stal'lyon, August 23 2026, Boosie Estates, Palmetto GA" width="1145" height="1373" loading="lazy" decoding="async">
+            <span class="flyer-cue" aria-hidden="true">&#10138; View flyer</span>
+          </a>
+          <div class="caption">
+            <div class="eyebrow" aria-hidden="true">Live Performance</div>
+            <h3><span data-ed="show4-title">Dukes &amp; Boots Concert</span> <span class="sub" data-ed="show4-sub">Boosie Badazz presents · Rhythm Ryderz</span></h3>
+            <div class="det">
+              <div><span class="ic" aria-hidden="true">🎤</span><span data-ed="show4-act">Stal'lyon with the Rhythm Ryderz · ChocLit, Beretta, Cynnamon, Dulcet, Self Made, Hurricane Tinka &amp; Q'yett Stormm · hosted by Tay Cheesy &amp; Lent Lawson</span></div>
+              <div><span class="ic" aria-hidden="true">📍</span><span data-ed="show4-venue">Boosie Estates · 9256 Wilkerson Mill Rd · Palmetto, GA</span></div>
+              <div><span class="ic" aria-hidden="true">🐎</span><span data-ed="show4-note">Sunday · no coolers allowed</span></div>
+              <div><span class="ic" aria-hidden="true">ℹ️</span><span data-ed="show4-info">Tables, tents &amp; vendors: @RoadRunnerMgmt · <span class="nb">470-557-0904</span></span></div>
+            </div>
+            <div class="btns">
+              <button class="btn primary" data-book>Book Stal'lyon</button>
+              <a class="btn ghost" href="https://www.eventbrite.com/e/boosie-dukes-boots-concert-tickets-1992966319912" target="_blank" rel="noopener">Get Tickets</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="show" aria-roledescription="slide" aria-label="Show 5 of 5: Maxim Trail Ride Field Party, October 17 2026">
+        <div class="poster">
+          <a class="flyer" href="/assets/show-maxim-trailride-oct17.jpg" target="_blank" rel="noopener" aria-label="Open flyer in full size: Maxim Trail Ride Field Party, October 17 2026">
+            <span class="flyer-bg" style="background-image:url('/assets/show-maxim-trailride-oct17.jpg')" aria-hidden="true"></span>
+            <span class="date-chip" aria-hidden="true"><span class="d-mo" data-ed="show5-date">Oct 17</span><span class="d-yr" data-ed="show5-year">2026</span></span>
+            <img class="zoomable" src="/assets/show-maxim-trailride-oct17.jpg" alt="Maxim Trail Ride Field Party featuring Stal'lyon, October 17 2026, 1912 Maxim Road, Lincolnton GA" width="1023" height="1537" loading="lazy" decoding="async">
+            <span class="flyer-cue" aria-hidden="true">&#10138; View flyer</span>
+          </a>
+          <div class="caption">
+            <div class="eyebrow" aria-hidden="true">Live Performance</div>
+            <h3><span data-ed="show5-title">Maxim Trail Ride</span> <span class="sub" data-ed="show5-sub">Field Party · presented by The Barksdales</span></h3>
+            <div class="det">
+              <div><span class="ic" aria-hidden="true">🎤</span><span data-ed="show5-act">Live performance by Stal'lyon · with Myia B · guest performance Jarvis Wingfield · special guest Jasmine Brown · DJ Biggums</span></div>
+              <div><span class="ic" aria-hidden="true">📍</span><span data-ed="show5-venue">1912 Maxim Road · Lincolnton, GA 30817</span></div>
+              <div><span class="ic" aria-hidden="true">🕛</span><span data-ed="show5-time">Gates 12PM · Field Party 4PM–11PM · 🎟️ $25 early bird · $30 at the gate · $40 RV parking without hookups · $150 vendors</span></div>
+              <div><span class="ic" aria-hidden="true">🐎</span><span data-ed="show5-note">Coolers, tents, ATVs, 4-wheelers &amp; horses welcome · no guns or grills · security enforced</span></div>
+              <div><span class="ic" aria-hidden="true">ℹ️</span><span data-ed="show5-info">Early bird tickets, vendors &amp; group rates: Dee <span class="nb">706-914-9035</span> · Erica <span class="nb">501-912-8519</span></span></div>
+            </div>
+            <div class="btns">
+              <button class="btn primary" data-book>Book Stal'lyon</button>
             </div>
           </div>
         </div>
