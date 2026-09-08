@@ -814,6 +814,54 @@
         </div>
       </article>
 
+      <article class="show" aria-roledescription="slide" aria-label="Show 7: Southern Soul Lovers Tour Trail Ride Edition, September 12 2026">
+        <div class="poster">
+          <a class="flyer" href="/assets/show-2026-09-12-southern-soul-lovers.jpg" target="_blank" rel="noopener" aria-label="Open flyer in full size: Show 7: Southern Soul Lovers Tour Trail Ride Edition, September 12 2026">
+            <span class="flyer-bg" style="background-image:url('/assets/show-2026-09-12-southern-soul-lovers.jpg')" aria-hidden="true"></span>
+            <span class="date-chip" aria-hidden="true"><span class="d-mo" data-ed="show7-date">Sep 12</span><span class="d-yr" data-ed="show7-year">2026</span></span>
+            <img class="zoomable" src="/assets/show-2026-09-12-southern-soul-lovers.jpg" alt="Southern Soul Lovers Tour Trail Ride Edition featuring Stal'lyon, September 12 2026, Camille Farms, Eatonton GA" width="951" height="1568" loading="lazy" decoding="async">
+            <span class="flyer-cue" aria-hidden="true">&#10138; View flyer</span>
+          </a>
+          <div class="caption">
+            <div class="eyebrow" aria-hidden="true">Live Performance</div>
+            <h3><span data-ed="show7-title">Southern Soul Lovers Tour</span> <span class="sub" data-ed="show7-sub">Trail Ride Edition &middot; 901 Music Group</span></h3>
+            <div class="det">
+              <div><span class="ic" aria-hidden="true">🎤</span><span data-ed="show7-act">Special guest Stal&#39;lyon performing &quot;Stal&#39;lyon Shuffle&quot; &middot; with Young Guy, Cecily Wilborn, Mike Clark Jr. &amp; Tonio Armani &middot; hosted by Tay Cheesy &middot; co-host Jasmine Brown &middot; DJ Trucker &middot; opening act Syng Saikou</span></div>
+              <div><span class="ic" aria-hidden="true">📍</span><span data-ed="show7-venue">Camille Farms &middot; 440 MLK Jr. Dr &middot; Eatonton, GA 31024</span></div>
+              <div><span class="ic" aria-hidden="true">🕛</span><span data-ed="show7-time">Saturday 12PM&ndash;10PM &middot; 🎟️ tickets on Eventbrite</span></div>
+              <div><span class="ic" aria-hidden="true">🐎</span><span data-ed="show7-note">Trail riders, horses, ATVs &amp; steppers &middot; food and non-food vendors welcome</span></div>
+              <div><span class="ic" aria-hidden="true">ℹ️</span><span data-ed="show7-info">$1,000 stepper contest &middot; cash prize &middot; a full day of fun, music &amp; good vibes</span></div>
+            </div>
+            <div class="btns">
+              <button class="btn primary" data-book>Book Stal&#39;lyon</button>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="show" aria-roledescription="slide" aria-label="Show 8: 2nd Annual Boots on the Ground Southern Soul Fest, November 14 2026">
+        <div class="poster">
+          <a class="flyer" href="/assets/show-2026-11-14-boots-on-the-ground.jpg" target="_blank" rel="noopener" aria-label="Open flyer in full size: Show 8: 2nd Annual Boots on the Ground Southern Soul Fest, November 14 2026">
+            <span class="flyer-bg" style="background-image:url('/assets/show-2026-11-14-boots-on-the-ground.jpg')" aria-hidden="true"></span>
+            <span class="date-chip" aria-hidden="true"><span class="d-mo" data-ed="show8-date">Nov 14</span><span class="d-yr" data-ed="show8-year">2026</span></span>
+            <img class="zoomable" src="/assets/show-2026-11-14-boots-on-the-ground.jpg" alt="2nd Annual Boots on the Ground Southern Soul Fest featuring Stal'lyon and King George, November 14 2026, Graham FL" width="906" height="1568" loading="lazy" decoding="async">
+            <span class="flyer-cue" aria-hidden="true">&#10138; View flyer</span>
+          </a>
+          <div class="caption">
+            <div class="eyebrow" aria-hidden="true">Live Performance</div>
+            <h3><span data-ed="show8-title">Boots on the Ground</span> <span class="sub" data-ed="show8-sub">2nd Annual Southern Soul Fest &middot; Platinum Production</span></h3>
+            <div class="det">
+              <div><span class="ic" aria-hidden="true">🎤</span><span data-ed="show8-act">Stal&#39;lyon on the bill with King George &middot; Myia B &middot; Uncle Daddy &middot; 69 Boyz &middot; Lynn Tate &middot; Cherrelle &middot; Japvonn &middot; The Groove Coalition Band &middot; hosted by Comedian Little Man</span></div>
+              <div><span class="ic" aria-hidden="true">📍</span><span data-ed="show8-venue">Sorr Callahan Fair Grounds &middot; UF Graham, FL</span></div>
+              <div><span class="ic" aria-hidden="true">🕛</span><span data-ed="show8-time">Saturday &middot; gates 2PM &middot; show starts 4PM &middot; 🎟️ early bird $45</span></div>
+              <div><span class="ic" aria-hidden="true">🐎</span><span data-ed="show8-note">Hookups, vendors, VIP tables, RVs &amp; campers welcome</span></div>
+              <div><span class="ic" aria-hidden="true">ℹ️</span><span data-ed="show8-info">Tickets, RVs, VIP &amp; vendors: myplatinumproductions.com</span></div>
+            </div>
+            <div class="btns">
+              <button class="btn primary" data-book>Book Stal&#39;lyon</button>
+            </div>
+          </div>
+        </div>
+      </article>
       <article class="show" aria-roledescription="slide" aria-label="Show 5 of 6: Maxim Trail Ride Field Party, October 17 2026">
         <div class="poster">
           <a class="flyer" href="/assets/show-maxim-trailride-oct17.jpg" target="_blank" rel="noopener" aria-label="Open flyer in full size: Maxim Trail Ride Field Party, October 17 2026">
@@ -1383,11 +1431,18 @@
     return { up:up, past:past };
   }
 
+  // 2026-09-07 FIX: this returned early when the node was ALREADY in the target
+  // parent, so a slide that never changed container never got re-ordered either.
+  // classify() sorted correctly and the DOM ignored it - Nov 14 sat before Oct 17.
+  // appendChild() MOVES an existing child to the end, so calling it unconditionally
+  // in sorted order is what actually reorders the rail. Returns true only when the
+  // node changed parent, so the caller's "did anything move" logic is unchanged.
   function moveTo(node, parent){
-    if(!parent || node.parentNode === parent) return false;
+    if(!parent) return false;
+    var changedParent = node.parentNode !== parent;
     parent.appendChild(node);
-    if(mounted){ node.classList.remove('reveal-child'); node.style.removeProperty('--rd'); }
-    return true;
+    if(mounted && changedParent){ node.classList.remove('reveal-child'); node.style.removeProperty('--rd'); }
+    return changedParent;
   }
 
   function label(s, pos){
