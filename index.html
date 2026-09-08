@@ -1365,6 +1365,16 @@
 #shows .tf-dates li{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:baseline;
   padding-bottom:8px;border-bottom:1px solid var(--line);text-align:left}
 #shows .tf-dates li:last-child{border-bottom:0;padding-bottom:0}
+/* qi 2026-09-07: "That show should not be as prominent as the current shows."
+   The soonest date leads; each later one steps back in weight and opacity, so the
+   flyer reads as a hierarchy instead of three equal claims on his attention. */
+#shows .tf-dates li.tf-next{padding-bottom:11px}
+#shows .tf-dates li.tf-next .tf-d{font-size:14.5px;color:var(--rose-hi)}
+#shows .tf-dates li.tf-next .tf-t{font-size:15px;font-weight:600;opacity:1}
+#shows .tf-dates li.tf-later{opacity:.62}
+#shows .tf-dates li.tf-later .tf-d{font-size:11.5px}
+#shows .tf-dates li.tf-later .tf-t{font-size:12px}
+#shows .tf-dates li.tf-later .tf-c{font-size:10.5px}
 #shows .tf-d{font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.09em;
   text-transform:uppercase;color:var(--rose-hi);white-space:nowrap;font-variant-numeric:tabular-nums}
 #shows .tf-t{font-family:var(--sans);font-size:13px;line-height:1.35;color:var(--ice);opacity:.94}
@@ -1715,7 +1725,7 @@
     if(!wrap || !list) return;
     if(!up || !up.length){ wrap.hidden = true; return; }
     var html = '';
-    up.forEach(function(rec){
+    up.forEach(function(rec, idx){
       var sl = rec.s;
       var d = sl.querySelector('[data-ed$="-date"]');
       var t = sl.querySelector('[data-ed$="-title"]');
@@ -1728,7 +1738,8 @@
         var parts = (v.textContent || '').split('\u00b7').map(function(x){ return x.trim(); }).filter(Boolean);
         city = parts.length ? parts[parts.length - 1] : '';
       }
-      html += '<li><span class="tf-d">' + tfEsc(dt) + '</span><span class="tf-t">' + tfEsc(ti) +
+      var cls = (idx === 0) ? 'tf-next' : 'tf-later';
+      html += '<li class="' + cls + '"><span class="tf-d">' + tfEsc(dt) + '</span><span class="tf-t">' + tfEsc(ti) +
               (city ? '<span class="tf-c">' + tfEsc(city) + '</span>' : '') + '</span></li>';
     });
     if(!html){ wrap.hidden = true; return; }
