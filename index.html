@@ -1319,7 +1319,7 @@
   border-top:1px solid var(--line-cool)}
 #shows .archive-grid{display:grid;grid-template-columns:1fr;gap:clamp(16px,3.2vw,24px);
   margin-top:clamp(24px,5vw,38px)}
-@media (min-width:820px){ #shows .archive-grid{grid-template-columns:repeat(2,1fr)} }
+@media (min-width:820px){ #shows .archive-grid{grid-template-columns:repeat(3,1fr)} }
 
 /* archive cards are grid tiles, not carousel slides — undo the track geometry */
 #shows .archive-grid .show{flex:none;width:auto;scroll-snap-align:none;scroll-snap-stop:normal}
@@ -1329,11 +1329,22 @@
 #shows .archive-grid .poster{grid-template-columns:none;grid-template-rows:auto auto}
 #shows .archive-grid .flyer{display:block}
 #shows .archive-grid .caption{border-top:1px solid var(--line);border-left:0}
+/* qi 2026-09-07: "The past shows should not be more prominent than the current
+   shows at all." They were rendering to 470px in 2 columns - nearly the size of the
+   live show. Three columns, capped height, and the whole block sits back at 78%
+   until hovered, so the archive reads as history rather than a second billing. */
 #shows .archive-grid .flyer img.zoomable{width:100%;height:auto;aspect-ratio:3/4;
-  min-height:0;max-height:none;object-fit:contain}
+  min-height:0;max-height:300px;object-fit:contain}
+#shows .archive{opacity:.78;transition:opacity .3s ease}
+#shows .archive:hover,#shows .archive:focus-within{opacity:1}
+#shows .archive-grid .caption{padding:11px 13px}
+#shows .archive-grid .caption .eyebrow{font-size:8.5px;letter-spacing:.2em}
+#shows .archive-grid .caption h3{font-size:14px;line-height:1.2}
+#shows .archive-grid .caption .sub{font-size:11px}
+#shows .archive-grid .det,#shows .archive-grid .btns{display:none}
 @supports not (aspect-ratio:3/4){
-  #shows .archive-grid .flyer img.zoomable{height:clamp(360px,88vw,470px)}
-  @media (min-width:820px){ #shows .archive-grid .flyer img.zoomable{height:clamp(360px,42vw,470px)} }
+  #shows .archive-grid .flyer img.zoomable{height:clamp(200px,54vw,300px)}
+  @media (min-width:820px){ #shows .archive-grid .flyer img.zoomable{height:clamp(200px,22vw,300px)} }
 }
 /* "Performed" tag, mirroring the date chip across the print */
 #shows .archive-grid .poster::after{content:"Performed";position:absolute;z-index:5;
