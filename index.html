@@ -1159,6 +1159,11 @@
 #shows .det div{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:var(--sans);font-size:13.5px;line-height:1.5;color:var(--ice);opacity:.92;text-wrap:pretty;text-align:center}
 #shows .det .ic{flex:0 0 auto;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;border-radius:8px;margin-top:1px;background:var(--glass-fill);border:1px solid var(--line);box-shadow:var(--glass-inset)}
 #shows .det div > span:last-child{flex:0 1 auto;min-width:0;max-width:100%}
+/* qi 2026-09-07: "where you got the bullet points in between each little part of
+   the sections, you should just make that vertical center as well" - each middot-
+   separated clause becomes its own centred line instead of one wrapped paragraph. */
+#shows .det div > span:last-child .ln{display:block;text-align:center}
+#shows .det div > span:last-child .ln + .ln{margin-top:3px}
 #shows .det em{font-style:italic;color:var(--rose-hi)}
 #shows .det .nb{white-space:nowrap}
 #shows .caption .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:0;width:auto;justify-content:center}
@@ -1590,6 +1595,39 @@
     if(reduce){ stop(); paint(cur); } else { start(); }
   }
   if(mq){ if(mq.addEventListener) mq.addEventListener('change', onMotionPref); else if(mq.addListener) mq.addListener(onMotionPref); }
+
+  // qi 2026-09-07: bullet-separated clauses each get their own centred line.
+  // Walks child NODES so <em> and .nb spans survive; only splits real text nodes.
+  function stackClauses(scope){
+    var spans = (scope||document).querySelectorAll('#shows .det div > span:last-child');
+    [].forEach.call(spans, function(sp){
+      if (sp.getAttribute('data-stacked') === '1') return;
+      if (sp.textContent.indexOf(' \u00b7 ') === -1) return;
+      var frag = document.createDocumentFragment();
+      var line = document.createElement('span'); line.className = 'ln';
+      function flush(){ if (line.childNodes.length){ frag.appendChild(line); }
+                        line = document.createElement('span'); line.className = 'ln'; }
+      [].slice.call(sp.childNodes).forEach(function(node){
+        if (node.nodeType === 3 && node.nodeValue.indexOf('\u00b7') !== -1){
+          var parts = node.nodeValue.split(/\s*\u00b7\s*/);
+          parts.forEach(function(p, i){
+            if (i > 0) flush();
+            if (p) line.appendChild(document.createTextNode(p));
+          });
+        } else {
+          line.appendChild(node.cloneNode(true));
+        }
+      });
+      flush();
+      if (frag.childNodes.length > 1){
+        sp.innerHTML = '';
+        sp.appendChild(frag);
+        sp.setAttribute('data-stacked','1');
+      }
+    });
+  }
+  stackClauses();
+  document.addEventListener('dcz:content', function(){ setTimeout(stackClauses, 0); });
 
   mount();
 
