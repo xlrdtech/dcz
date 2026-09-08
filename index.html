@@ -435,6 +435,45 @@
 #music .yt-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
 #music .yt-card .t{font-size:12.5px;line-height:1.3;padding:9px 11px 3px;font-weight:600}
 #music .yt-card .d{font-size:10.5px;opacity:.6;padding:0 11px 10px;letter-spacing:.04em}
+
+/* ARCHIVE AS A SWIPE STRIP — qi 2026-09-08: "the archive needs to be a small
+   horizontal... it could be a gallery" + "they get older" (older = less room).
+   It was a stacked single column on phones, which made the page enormously long
+   and was why the bottom felt unreachable. Now it is one swipeable row: past
+   shows take a fixed slice of width no matter how many there are, so the page
+   length stops growing with history. */
+#shows .archive-grid{display:flex !important;grid-template-columns:none !important;
+  overflow-x:auto;scroll-snap-type:x proximity;gap:12px;padding-bottom:10px;
+  -webkit-overflow-scrolling:touch}
+#shows .archive-grid::-webkit-scrollbar{height:6px}
+#shows .archive-grid::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+#shows .archive-grid .show{flex:0 0 clamp(132px,38vw,168px) !important;width:auto;
+  scroll-snap-align:start}
+#shows .archive-grid .flyer img.zoomable{max-height:190px}
+#shows .archive-grid .caption{padding:8px 10px}
+#shows .archive-grid .caption h3{font-size:12.5px}
+#shows .archive-grid .caption .sub{font-size:10px}
+#shows .archive-grid .caption .eyebrow{font-size:8px}
+@media (min-width:820px){
+  #shows .archive-grid .show{flex:0 0 clamp(150px,17vw,190px) !important}
+}
+
+/* Two defects visible only by LOOKING at the strip, not by measuring it:
+   (1) the PERFORMED badge was clipped to "ERFORMED" by the narrower card, and
+   (2) the title wrapped to 4 lines, making cards tall and text-heavy while the
+       flyer — the thing worth seeing — was squeezed small.
+   Badge scales down and stops overflowing; title is capped at two lines; the
+   flyer gets the room back. */
+#shows .archive-grid .show{overflow:hidden}
+#shows .archive-grid .poster .eyebrow,
+#shows .archive-grid .badge,
+#shows .archive-grid [class*="perform"]{font-size:7px !important;letter-spacing:.08em !important;
+  padding:3px 6px !important;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#shows .archive-grid .caption h3{font-size:11.5px;line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#shows .archive-grid .caption .sub{font-size:9.5px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#shows .archive-grid .flyer img.zoomable{max-height:none;aspect-ratio:3/4;object-fit:cover}
 </style>
 </head>
 <body class="preload-active">
