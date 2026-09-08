@@ -692,6 +692,20 @@
   <div class="wrap">
     <div class="kicker">On Stage</div>
     <h2>Upcoming Shows</h2>
+    <!-- ── NO UPCOMING DATES · honest empty state ──
+         Authored here rather than injected, for two measured reasons:
+         (1) the booking modal binds [data-book] once at parse time, so an injected
+             button would be dead; (2) it ships `hidden`, so a visitor with JS off
+             never sees it and gets the full show list instead — fail open. -->
+    <div class="shows-empty" id="showsEmpty" hidden>
+      <div class="se-mark" aria-hidden="true">&#10022;</div>
+      <p class="se-lead">No dates on the calendar right now.</p>
+      <p class="se-sub">New shows are posted here as soon as they&rsquo;re booked. Want Stal&rsquo;lyon on yours?</p>
+      <div class="btns">
+        <button class="btn primary" data-book>Book Stal'lyon</button>
+        <a class="btn ghost" href="#showsArchive">See past shows</a>
+      </div>
+    </div>
     <div class="shows-gallery" id="showsGallery" role="group" aria-roledescription="carousel" aria-label="Upcoming shows">
   <div class="gal-stage">
     <button type="button" class="gal-nav gal-prev" aria-label="Previous show"><i aria-hidden="true">&#8249;</i></button>
@@ -861,6 +875,19 @@
   </div>
   <p class="gal-live" aria-live="polite"></p>
 </div>
+
+    <!-- ── THE ARCHIVE ──
+         Ships EMPTY. Past shows are moved in here at runtime by the shows module.
+         Deliberately placed AFTER <div class="gal-dots">: dcz-air.py appends a new
+         flyer after the last "      </article>" occurring BEFORE gal-dots, so an
+         <article> authored above that point would send every future auto-published
+         flyer into the archive instead of the upcoming carousel. -->
+    <div class="shows-archive" id="showsArchive" hidden>
+      <div class="kicker">The Archive</div>
+      <h2 style="font-size:clamp(20px,3.6vw,30px)">Past Shows</h2>
+      <p class="lead">Where Stal&rsquo;lyon has already been. Tap any flyer to open it full size.</p>
+      <div class="archive-grid" id="showsArchiveGrid"></div>
+    </div>
   </div>
 </section>
 
@@ -1182,6 +1209,65 @@
   html:not(.allow-motion) #shows .show:not(.is-active) .poster{opacity:1;transform:none}
   html:not(.allow-motion) #shows .flyer:hover img.zoomable{transform:none}
 }
+
+/* ════════ ARCHIVE SPLIT + EMPTY STATE ════════
+   Andre, in the room 2026-09-07: "So start from current and upcoming."
+   → "And then have the archive." → "Okay. Makes sense."
+   Past shows are RELOCATED, never deleted — the same article.show nodes
+   move into .archive-grid at runtime, so their data-ed indices, their .zoomable
+   lightbox binding and their [data-book] listener all travel with them, and
+   content.json's positional show1..showN mapping is untouched. */
+
+#shows .shows-empty[hidden],
+#shows .shows-gallery[hidden],
+#shows .shows-archive[hidden]{display:none}
+
+/* ── no upcoming dates: an honest panel, not a blank hole ── */
+#shows .shows-empty{position:relative;display:block;text-align:center;overflow:hidden;
+  margin-top:clamp(26px,5vw,44px);padding:clamp(30px,6vw,46px) clamp(20px,5vw,34px);
+  border-radius:20px;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(19,37,78,.55),rgba(10,14,28,.72));
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  box-shadow:var(--glass-inset),0 28px 70px -28px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04)}
+#shows .shows-empty::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--rose-hi) 22%,var(--rose) 50%,var(--rose-hi) 78%,transparent)}
+#shows .shows-empty .se-mark{font-family:var(--serif);font-size:24px;line-height:1;margin-bottom:14px;
+  background:var(--gold-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+#shows .shows-empty .se-lead{font-family:var(--serif);font-weight:600;font-size:clamp(17px,4.2vw,21px);
+  color:var(--plat-hi);margin:0;text-wrap:balance}
+#shows .shows-empty .se-sub{font-family:var(--sans);font-size:14px;line-height:1.6;color:#bcc6d8;
+  max-width:46ch;margin:10px auto 0;text-wrap:pretty}
+#shows .shows-empty .btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}
+
+/* ── the archive ── */
+#shows .shows-archive{margin-top:clamp(46px,8vw,74px);padding-top:clamp(30px,6vw,46px);
+  border-top:1px solid var(--line-cool)}
+#shows .archive-grid{display:grid;grid-template-columns:1fr;gap:clamp(16px,3.2vw,24px);
+  margin-top:clamp(24px,5vw,38px)}
+@media (min-width:820px){ #shows .archive-grid{grid-template-columns:repeat(2,1fr)} }
+
+/* archive cards are grid tiles, not carousel slides — undo the track geometry */
+#shows .archive-grid .show{flex:none;width:auto;scroll-snap-align:none;scroll-snap-stop:normal}
+#shows .archive-grid .show:last-child{flex-basis:auto}
+/* never dim a past flyer: Andre — "If they go on the page, they better see the real performers." */
+#shows .archive-grid .show:not(.is-active) .poster{opacity:1;transform:none}
+#shows .archive-grid .poster{grid-template-columns:none;grid-template-rows:auto auto}
+#shows .archive-grid .flyer{display:block}
+#shows .archive-grid .caption{border-top:1px solid var(--line);border-left:0}
+#shows .archive-grid .flyer img.zoomable{width:100%;height:auto;aspect-ratio:3/4;
+  min-height:0;max-height:none;object-fit:contain}
+@supports not (aspect-ratio:3/4){
+  #shows .archive-grid .flyer img.zoomable{height:clamp(360px,88vw,470px)}
+  @media (min-width:820px){ #shows .archive-grid .flyer img.zoomable{height:clamp(360px,42vw,470px)} }
+}
+/* "Performed" tag, mirroring the date chip across the print */
+#shows .archive-grid .poster::after{content:"Performed";position:absolute;z-index:5;
+  top:clamp(20px,4.6vw,30px);right:clamp(20px,4.6vw,30px);
+  font-family:var(--sans);font-weight:600;font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--rose-hi);padding:7px 12px;border-radius:999px;
+  border:1px solid var(--glass-border);background:rgba(8,12,24,.55);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:var(--glass-inset)}
+@media (max-width:380px){ #shows .archive-grid .poster::after{letter-spacing:.14em;padding:6px 9px} }
 </style>
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
   <span class="lb-x" aria-label="Close">&times;</span>
@@ -1225,68 +1311,11 @@
   'use strict';
   var root = document.getElementById('showsGallery'); if(!root) return;
   var track = document.getElementById('showsTrack'); if(!track) return;
-  var slides = [].slice.call(track.querySelectorAll('.show')); if(!slides.length) return;
+  var all   = [].slice.call(track.querySelectorAll('.show')); if(!all.length) return;
 
-  // ── DATE-AWARE ORDER (LaTina 2026-07-29: "I wonder why it does[n't] line up
-  // according to dates"). The heading promises "Upcoming Shows", but the carousel
-  // opened on Jul 10 — 19 days past — because slide order was DOM order.
-  // HARD CONSTRAINT: content.json overlays these slides POSITIONALLY (c.shows[i] ->
-  // showN), so the DOM order must NOT change or a paying client's show data gets
-  // reassigned. .shows-track is flex, so we reorder VISUALLY via CSS `order` and
-  // leave the DOM — and therefore the index mapping — byte-identical.
-  function orderByDate(){
-    var MON = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-    var today = new Date(); today.setHours(0,0,0,0);
-    var meta = slides.map(function(s, i){
-      var mo = s.querySelector('[data-ed$="-date"]'), yr = s.querySelector('[data-ed$="-year"]');
-      var txt = mo ? (mo.textContent || '').trim() : '';
-      var year = yr ? parseInt(yr.textContent, 10) : NaN;
-      var m = txt.match(/^([A-Z][a-z]{2})\s+(\d{1,2})(?:\s*[-–]\s*(\d{1,2}))?/);
-      if(!m || !(m[1] in MON) || !year) return { s:s, i:i, start:null, end:null };
-      return {
-        s:s, i:i,
-        start: new Date(year, MON[m[1]], parseInt(m[2],10)),
-        // multi-day events are not over until their LAST day
-        end:   new Date(year, MON[m[1]], parseInt(m[3] || m[2],10))
-      };
-    });
-    var future = meta.filter(function(x){ return !x.end || x.end >= today; });
-    // if every show has passed, keep them all — an empty section is worse than a stale one
-    var keep = future.length ? future : meta;
-    keep.sort(function(a,b){ return (a.start ? a.start.getTime() : 0) - (b.start ? b.start.getTime() : 0); });
-    meta.forEach(function(x){
-      var rank = keep.indexOf(x);
-      if(rank === -1){ x.s.hidden = true; x.s.style.display = 'none'; return; }
-      x.s.hidden = false;
-      x.s.style.order = rank;
-      // Rebuild the whole announced label from the SAME nodes /edit/ writes (title/date/year),
-      // not from the hardcoded attribute. Scraping the attribute preserved whatever name was
-      // baked into the HTML, so renaming a show in content.json left screen readers announcing
-      // the OLD name forever while every sighted visitor saw the new one.
-      var t  = x.s.querySelector('[data-ed$="-title"]');
-      var mo = x.s.querySelector('[data-ed$="-date"]');
-      var yr = x.s.querySelector('[data-ed$="-year"]');
-      var pos = 'Show ' + (rank+1) + ' of ' + keep.length;
-      var name = t ? (t.textContent || '').trim() : '';
-      var when = [mo && (mo.textContent||'').trim(), yr && (yr.textContent||'').trim()]
-                   .filter(Boolean).join(' ');
-      if (name || when) {
-        x.s.setAttribute('aria-label', pos + ': ' + [name, when].filter(Boolean).join(', '));
-      } else {
-        // no readable title/date — keep the position honest, leave the rest as authored
-        var lab = x.s.getAttribute('aria-label') || '';
-        x.s.setAttribute('aria-label', pos + lab.replace(/^Show\s+\d+\s+of\s+\d+/, ''));
-      }
-    });
-    slides = keep.map(function(x){ return x.s; });
-  }
-  orderByDate();
-  // KNOWN LIMIT, deliberate: content.json is fetched async and lands AFTER this init, so
-  // if the client edits a DATE at /edit/ the new order applies on next load, not instantly.
-  // A re-sort on mutation was tried and dropped — `n` and the dots array are captured at
-  // init, so changing the visible count mid-flight can desync the carousel. A one-load-stale
-  // ORDER is a far smaller defect on a paying client's page than a broken carousel.
-  // Dates today come from the HTML and content.json's values match it, so this is inert.
+  var archive     = document.getElementById('showsArchive');
+  var archiveGrid = document.getElementById('showsArchiveGrid');
+  var emptyPanel  = document.getElementById('showsEmpty');
 
   var prevBtn = root.querySelector('.gal-prev'), nextBtn = root.querySelector('.gal-next');
   var dotsWrap = root.querySelector('.gal-dots'), bar = root.querySelector('.gal-progress > i');
@@ -1294,25 +1323,162 @@
 
   var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
   var reduce = !!(mq && mq.matches) && !document.documentElement.classList.contains('allow-motion');
-  var n = slides.length, cur = 0, auto = null, AUTO_MS = 7000;
-  var hovering = false, focused = false;
 
-  // ── build one dot per show (roving-tabindex tablist) ──
-  var dots = [];
-  if(dotsWrap){
-    slides.forEach(function(s, i){
-      var b = document.createElement('button');
-      b.type = 'button'; b.setAttribute('role','tab');
-      b.setAttribute('aria-label','Show ' + (i+1) + ' of ' + n);
-      b.addEventListener('click', function(){ stop(); go(i, true); });
-      dotsWrap.appendChild(b); dots.push(b);
+  var slides = [], dots = [], n = 0, cur = 0, auto = null, AUTO_MS = 7000;
+  var hovering = false, focused = false, mounted = false, lastSig = '';
+
+  var MON = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+
+  function mk(y1,mo1,d1,y2,mo2,d2){
+    if(!(d1 >= 1 && d1 <= 31) || !(d2 >= 1 && d2 <= 31)) return null;
+    var a = new Date(y1, mo1, d1); a.setHours(0,0,0,0);
+    var b = new Date(y2, mo2, d2); b.setHours(0,0,0,0);
+    if(a.getMonth() !== mo1 || b.getMonth() !== mo2) return null;
+    if(b < a) b = a;
+    return { start:a, end:b };
+  }
+
+  function parseWhen(dateTxt, yearTxt){
+    var txt = String(dateTxt == null ? '' : dateTxt).trim();
+    var yr  = parseInt(String(yearTxt == null ? '' : yearTxt).replace(/[^0-9]/g,''), 10);
+    if(!txt || !yr || yr < 1900 || yr > 2999) return null;
+
+    var num = txt.match(/^(\d{1,2})\s*[\/.]\s*(\d{1,2})(?:\s*(?:[-–—]|to)\s*(\d{1,2}))?\s*$/i);
+    if(num){
+      var ni = parseInt(num[1],10) - 1;
+      if(ni < 0 || ni > 11) return null;
+      return mk(yr, ni, parseInt(num[2],10), yr, ni, parseInt(num[3] || num[2], 10));
+    }
+
+    var m = txt.match(/^([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:\s*(?:[-–—]|to|&|and)\s*(?:([A-Za-z]{3,9})\.?\s+)?(\d{1,2}))?/);
+    if(!m) return null;
+    var m1 = MON[m[1].slice(0,3).toLowerCase()];
+    if(m1 === undefined) return null;
+    var m2 = m[3] ? MON[m[3].slice(0,3).toLowerCase()] : m1;
+    if(m2 === undefined) m2 = m1;
+    var y2 = (m2 < m1) ? yr + 1 : yr;
+    return mk(yr, m1, parseInt(m[2],10), y2, m2, parseInt(m[4] || m[2], 10));
+  }
+
+  function classify(){
+    var today = new Date(); today.setHours(0,0,0,0);
+    var up = [], past = [];
+    all.forEach(function(s, i){
+      var mo = s.querySelector('[data-ed$="-date"]');
+      var yr = s.querySelector('[data-ed$="-year"]');
+      var when = parseWhen(mo && mo.textContent, yr && yr.textContent);
+      var rec = { s:s, i:i, when:when };
+      if(!when || when.end >= today) up.push(rec); else past.push(rec);
+    });
+    up.sort(function(a,b){
+      if(!a.when && !b.when) return a.i - b.i;
+      if(!a.when) return 1;
+      if(!b.when) return -1;
+      return (a.when.start - b.when.start) || (a.i - b.i);
+    });
+    past.sort(function(a,b){ return (b.when.end - a.when.end) || (b.when.start - a.when.start); });
+    return { up:up, past:past };
+  }
+
+  function moveTo(node, parent){
+    if(!parent || node.parentNode === parent) return false;
+    parent.appendChild(node);
+    if(mounted){ node.classList.remove('reveal-child'); node.style.removeProperty('--rd'); }
+    return true;
+  }
+
+  function label(s, pos){
+    var t  = s.querySelector('[data-ed$="-title"]');
+    var mo = s.querySelector('[data-ed$="-date"]');
+    var yr = s.querySelector('[data-ed$="-year"]');
+    var name = t ? (t.textContent || '').trim() : '';
+    var when = [mo && (mo.textContent||'').trim(), yr && (yr.textContent||'').trim()].filter(Boolean).join(' ');
+    if(name || when){ s.setAttribute('aria-label', pos + ': ' + [name, when].filter(Boolean).join(', ')); }
+    else {
+      var lab = (s.getAttribute('aria-label') || '')
+                  .replace(/^(?:Past show|Show)\s+\d+\s+of\s+\d+:?\s*/, '').trim();
+      s.setAttribute('aria-label', lab ? pos + ': ' + lab : pos);
+    }
+  }
+
+  function openPlayer(id, title){
+    if(!id) return;
+    var o = document.getElementById('dcz-player');
+    if(!o){
+      o = document.createElement('div'); o.id = 'dcz-player';
+      o.style.cssText = 'position:fixed;inset:0;z-index:9998;display:none;background:#000';
+      o.innerHTML = '<button class="pl-x" aria-label="Close" style="position:absolute;top:14px;right:18px;z-index:2;font:30px/1 system-ui;color:#fff;background:rgba(0,0,0,.45);border:0;border-radius:9px;padding:2px 14px;cursor:pointer">&times;</button><div class="pl-frame" style="position:absolute;inset:0"></div>';
+      document.body.appendChild(o);
+      o.querySelector('.pl-x').addEventListener('click', closePlayer);
+      document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePlayer(); });
+    }
+    var frame = o.querySelector('.pl-frame');
+    var ifr = document.createElement('iframe');
+    ifr.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    ifr.setAttribute('allowfullscreen','');
+    ifr.setAttribute('title', title || 'Live performance');
+    ifr.style.cssText = 'width:100%;height:100%;border:0;display:block';
+    ifr.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0&playsinline=1';
+    frame.innerHTML = ''; frame.appendChild(ifr);
+    o.style.display = 'block'; document.body.style.overflow = 'hidden';
+    try{ (o.requestFullscreen || o.webkitRequestFullscreen || function(){}).call(o); }catch(_){}
+  }
+  function closePlayer(){
+    var o = document.getElementById('dcz-player'); if(!o) return;
+    o.style.display = 'none';
+    var fr = o.querySelector('.pl-frame'); if(fr) fr.innerHTML = '';
+    document.body.style.overflow = '';
+    try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(_){}
+  }
+
+  function attachVideo(s){
+    var id = (s.getAttribute('data-video') || '').trim();
+    var btns = s.querySelector('.caption .btns');
+    var already = s.querySelector('[data-video-btn]');
+    if(!id || !btns){ if(already && already.parentNode) already.parentNode.removeChild(already); return; }
+    var t = s.querySelector('[data-ed$="-title"]');
+    var title = t ? (t.textContent || '').trim() : 'Live performance';
+    if(already){ already.setAttribute('data-vid', id); return; }
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'btn ghost';
+    b.setAttribute('data-video-btn','');
+    b.setAttribute('data-vid', id);
+    b.textContent = '▶ Watch the performance';
+    b.setAttribute('aria-label', 'Watch the performance: ' + title);
+    b.addEventListener('click', function(){ openPlayer(b.getAttribute('data-vid'), title); });
+    btns.insertBefore(b, btns.firstChild);
+  }
+
+  function layout(b){
+    b.up.forEach(function(x, k){
+      moveTo(x.s, track);
+      x.s.hidden = false;
+      x.s.style.display = '';
+      x.s.style.order = k;
+      x.s.removeAttribute('data-past');
+      label(x.s, 'Show ' + (k + 1) + ' of ' + b.up.length);
+      attachVideo(x.s);
+    });
+    b.past.forEach(function(x, k){
+      moveTo(x.s, archiveGrid || track);
+      x.s.hidden = false;
+      x.s.style.display = '';
+      x.s.style.order = k;
+      x.s.classList.remove('is-active');
+      x.s.setAttribute('data-past','1');
+      x.s.setAttribute('aria-hidden','false');
+      if(!archiveGrid){ x.s.hidden = true; x.s.style.display = 'none'; }
+      label(x.s, 'Past show ' + (k + 1) + ' of ' + b.past.length);
+      attachVideo(x.s);
     });
   }
 
-  function clamp(i){ return Math.max(0, Math.min(n-1, i)); }
+  function clamp(i){ return Math.max(0, Math.min(n - 1, i)); }
   function slideLeft(i){ return slides[i].offsetLeft - track.offsetLeft; }
 
   function paint(i){
+    if(!n) return;
     cur = i;
     dots.forEach(function(d, k){
       var on = k === i;
@@ -1324,47 +1490,89 @@
       s.classList.toggle('is-active', k === i);
       s.setAttribute('aria-hidden', k === i ? 'false' : 'true');
     });
-    if(bar) bar.style.width = (n > 1 ? (i/(n-1))*100 : 100) + '%';
+    if(bar) bar.style.width = (n > 1 ? (i / (n - 1)) * 100 : 100) + '%';
     if(prevBtn) prevBtn.disabled = (i <= 0);
-    if(nextBtn) nextBtn.disabled = (i >= n-1);
-    if(live) live.textContent = 'Show ' + (i+1) + ' of ' + n;
+    if(nextBtn) nextBtn.disabled = (i >= n - 1);
+    if(live) live.textContent = 'Show ' + (i + 1) + ' of ' + n;
   }
 
   function go(i, smooth){
+    if(!n) return;
     i = clamp(i);
     try{ track.scrollTo({ left: slideLeft(i), behavior: (smooth && !reduce) ? 'smooth' : 'auto' }); }
     catch(e){ track.scrollLeft = slideLeft(i); }
     paint(i);
   }
 
-  // sync active state to whatever the user swipe / scroll-snaps to
+  function rebuildDots(){
+    dots = [];
+    if(!dotsWrap) return;
+    dotsWrap.innerHTML = '';
+    slides.forEach(function(s, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role','tab');
+      b.setAttribute('aria-label','Show ' + (i + 1) + ' of ' + n);
+      b.addEventListener('click', function(){ stop(); go(i, true); });
+      dotsWrap.appendChild(b);
+      dots.push(b);
+    });
+  }
+
+  function mount(){
+    var b = classify();
+    var sig = b.up.map(function(x){ return x.i; }).join(',') + '|' +
+              b.past.map(function(x){ return x.i; }).join(',');
+    if(sig === lastSig){ all.forEach(attachVideo); return false; }
+    lastSig = sig;
+
+    layout(b);
+    slides = b.up.map(function(x){ return x.s; });
+    n = slides.length;
+    rebuildDots();
+
+    if(emptyPanel) emptyPanel.hidden = (n !== 0);
+    root.hidden = (n === 0);
+    if(archive) archive.hidden = (b.past.length === 0);
+
+    var solo = (n < 2);
+    if(prevBtn) prevBtn.hidden = solo;
+    if(nextBtn) nextBtn.hidden = solo;
+    if(dotsWrap) dotsWrap.hidden = solo;
+
+    cur = 0;
+    if(n){ paint(0); go(0, false); }
+    else if(live){ live.textContent = ''; }
+    mounted = true;
+    return true;
+  }
+
+  function tick(){ go(cur >= n - 1 ? 0 : cur + 1, true); }
+  function start(){ if(reduce || n < 2 || auto || hovering || focused || document.hidden) return; auto = setInterval(tick, AUTO_MS); }
+  function stop(){ if(auto){ clearInterval(auto); auto = null; } }
+
   var rafId = 0;
   track.addEventListener('scroll', function(){
-    if(rafId) return;
+    if(rafId || !n) return;
     rafId = requestAnimationFrame(function(){
       rafId = 0;
+      if(!n) return;
       var best = 0, bestD = Infinity, sl = track.scrollLeft;
       for(var k = 0; k < n; k++){ var d = Math.abs(slideLeft(k) - sl); if(d < bestD){ bestD = d; best = k; } }
       if(best !== cur) paint(best);
     });
   }, { passive: true });
 
-  // ── arrows ──
-  if(prevBtn) prevBtn.addEventListener('click', function(){ stop(); go(cur-1, true); });
-  if(nextBtn) nextBtn.addEventListener('click', function(){ stop(); go(cur+1, true); });
+  if(prevBtn) prevBtn.addEventListener('click', function(){ stop(); go(cur - 1, true); });
+  if(nextBtn) nextBtn.addEventListener('click', function(){ stop(); go(cur + 1, true); });
 
-  // ── keyboard (arrows/Home/End anywhere focus is inside the gallery) ──
   root.addEventListener('keydown', function(e){
-    if(e.key === 'ArrowLeft'){ e.preventDefault(); stop(); go(cur-1, true); }
-    else if(e.key === 'ArrowRight'){ e.preventDefault(); stop(); go(cur+1, true); }
+    if(!n) return;
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); stop(); go(cur - 1, true); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); stop(); go(cur + 1, true); }
     else if(e.key === 'Home'){ e.preventDefault(); stop(); go(0, true); }
-    else if(e.key === 'End'){ e.preventDefault(); stop(); go(n-1, true); }
+    else if(e.key === 'End'){ e.preventDefault(); stop(); go(n - 1, true); }
   });
-
-  // ── autoplay: paused on hover/focus/touch + tab hidden; off under reduced-motion ──
-  function tick(){ go(cur >= n-1 ? 0 : cur+1, true); }
-  function start(){ if(reduce || n < 2 || auto || hovering || focused || document.hidden) return; auto = setInterval(tick, AUTO_MS); }
-  function stop(){ if(auto){ clearInterval(auto); auto = null; } }
 
   root.addEventListener('mouseenter', function(){ hovering = true; stop(); });
   root.addEventListener('mouseleave', function(){ hovering = false; start(); });
@@ -1374,17 +1582,18 @@
   root.addEventListener('pointerdown', function(){ stop(); }, { passive: true });
   document.addEventListener('visibilitychange', function(){ if(document.hidden) stop(); else start(); });
 
-  // react if the user toggles reduced-motion at runtime (grafted from #2)
   function onMotionPref(){
     reduce = !!(mq && mq.matches) && !document.documentElement.classList.contains('allow-motion');
     if(reduce){ stop(); paint(cur); } else { start(); }
   }
   if(mq){ if(mq.addEventListener) mq.addEventListener('change', onMotionPref); else if(mq.addListener) mq.addListener(onMotionPref); }
 
-  if(n < 2){ if(prevBtn) prevBtn.hidden = true; if(nextBtn) nextBtn.hidden = true; if(dotsWrap) dotsWrap.hidden = true; }
+  mount();
 
-  paint(0);
-  // re-pin geometry after resize and after fonts/layout settle
+  document.addEventListener('dcz:content', function(){
+    if(mount()) window.dispatchEvent(new Event('resize'));
+  }, { once: true });
+
   window.addEventListener('resize', function(){ go(cur, false); });
   setTimeout(function(){ go(0, false); start(); }, 80);
 })();
@@ -1532,10 +1741,15 @@
         setText('show'+n+'-act',s.act); setText('show'+n+'-venue',s.venue);
         setText('show'+n+'-time',s.time); setText('show'+n+'-note',s.note);
         setText('show'+n+'-info',s.info); setText('show'+n+'-date',s.date); setText('show'+n+'-year',s.year);
+        // Optional performance footage (a bare YouTube id).
+        if(s.video){ var vt=d.querySelector('[data-ed="show'+n+'-title"]');
+          var va=vt&&vt.closest&&vt.closest('article.show');
+          if(va) va.setAttribute('data-video',String(s.video).trim()); }
       }); }
       if(c.contacts){ setContact('latina',c.contacts.latina); setContact('andre',c.contacts.andre); }
     })
-    .catch(function(){});
+    .catch(function(){})
+    .then(function(){ try{ d.dispatchEvent(new Event('dcz:content')); }catch(_){} });
 })();
 </script>
 </body>
