@@ -1356,16 +1356,19 @@
 @media (max-width:380px){ #shows .archive-grid .poster::after{letter-spacing:.14em;padding:6px 9px} }
 
 /* ════════ THE MAIN FLYER — one panel, every date ════════ */
-#shows .tour-flyer{position:relative;display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1fr);
+/* qi 2026-09-07 full-width pass: at min(1100px,92vw) the art column drove a
+   ~670px tall row and the right half emptied out. Cap the panel height and give
+   the art less of the split so it reads as a banner, not a portrait wall. */
+#shows .tour-flyer{position:relative;display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1fr);
   align-items:stretch;margin:0 auto clamp(26px,4vw,40px);max-width:min(1100px, 92vw);
-  border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  max-height:420px;border:1px solid var(--line);border-radius:20px;overflow:hidden;
   background:linear-gradient(140deg,#101830 0%,#0a0e1c 58%,#160f14 100%);
   box-shadow:0 26px 70px rgba(0,0,0,.5)}
 #shows .tour-flyer::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 90% at 12% 8%,rgba(224,178,122,.13),transparent 60%)}
-#shows .tf-art{position:relative;min-height:270px;overflow:hidden;
+#shows .tf-art{position:relative;min-height:0;overflow:hidden;
   background:radial-gradient(80% 70% at 50% 100%,rgba(224,178,122,.16),transparent 70%)}
-#shows .tf-art img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
+#shows .tf-art img{width:100%;height:100%;object-fit:cover;object-position:50% 8%;display:block}
 #shows .tf-body{padding:clamp(18px,3vw,28px) clamp(16px,3vw,26px);display:flex;flex-direction:column;
   align-items:center;text-align:center;justify-content:center;position:relative;z-index:1}
 #shows .tf-kicker{font-family:var(--sans);font-size:10.5px;letter-spacing:.34em;text-transform:uppercase;
@@ -1393,7 +1396,7 @@
 #shows .tf-foot{font-family:var(--sans);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--rose);opacity:.75;margin:clamp(14px,2vw,20px) 0 0}
 @media (max-width:640px){
-  #shows .tour-flyer{grid-template-columns:1fr}
+  #shows .tour-flyer{grid-template-columns:1fr;max-height:none}
   #shows .tf-art{min-height:210px;max-height:280px}
   #shows .tf-dates{max-width:none}
 }
