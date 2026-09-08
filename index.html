@@ -1152,10 +1152,13 @@
 #shows .caption .eyebrow{font-family:var(--sans);font-weight:600;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--steel);margin-bottom:9px}
 #shows .caption h3{font-family:var(--serif);font-weight:600;font-size:clamp(17px,4.6vw,22px);line-height:1.2;color:var(--plat-hi);margin:0 0 13px;text-wrap:balance}
 #shows .caption h3 .sub{display:block;font-size:.76em;font-weight:500;color:var(--rose);letter-spacing:.04em;margin-top:5px}
-#shows .det{display:grid;gap:10px;margin:0 0 18px}
-#shows .det div{display:flex;gap:11px;align-items:flex-start;font-family:var(--sans);font-size:13.5px;line-height:1.5;color:var(--ice);opacity:.92;text-wrap:pretty}
+#shows .det{display:grid;gap:16px;margin:0 0 18px}
+/* qi 2026-09-07: "those icons ... need to go underneath each one of those sections
+   so it can be more centered." The icon now stacks ABOVE its line and the whole
+   row centres, instead of hanging off the left edge of centred text. */
+#shows .det div{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:var(--sans);font-size:13.5px;line-height:1.5;color:var(--ice);opacity:.92;text-wrap:pretty;text-align:center}
 #shows .det .ic{flex:0 0 auto;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;border-radius:8px;margin-top:1px;background:var(--glass-fill);border:1px solid var(--line);box-shadow:var(--glass-inset)}
-#shows .det div > span:last-child{flex:1 1 auto;min-width:0}
+#shows .det div > span:last-child{flex:0 1 auto;min-width:0;max-width:100%}
 #shows .det em{font-style:italic;color:var(--rose-hi)}
 #shows .det .nb{white-space:nowrap}
 #shows .caption .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:0;width:auto;justify-content:center}
