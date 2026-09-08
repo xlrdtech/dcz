@@ -419,6 +419,22 @@
   @media (prefers-reduced-motion:reduce){
     html:not(.allow-motion) .will-animate,html:not(.allow-motion) .will-animate .reveal-child{opacity:1 !important;transform:none !important;transition:none !important}
   }
+
+/* auto-fed YouTube releases — a compact horizontal strip, so it never competes
+   with the live shows above it and stays short on a phone. */
+#music .yt-feed{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;
+  margin-top:clamp(18px,3.4vw,26px);padding-bottom:8px;-webkit-overflow-scrolling:touch}
+#music .yt-feed[hidden]{display:none}
+#music .yt-feed::-webkit-scrollbar{height:6px}
+#music .yt-feed::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+#music .yt-card{flex:0 0 clamp(150px,42vw,196px);scroll-snap-align:start;
+  border:1px solid var(--line);border-radius:11px;overflow:hidden;
+  background:rgba(255,255,255,.02);text-decoration:none;color:inherit;
+  transition:border-color .2s ease,transform .2s ease}
+#music .yt-card:hover{border-color:rgba(255,255,255,.28);transform:translateY(-2px)}
+#music .yt-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+#music .yt-card .t{font-size:12.5px;line-height:1.3;padding:9px 11px 3px;font-weight:600}
+#music .yt-card .d{font-size:10.5px;opacity:.6;padding:0 11px 10px;letter-spacing:.04em}
 </style>
 </head>
 <body class="preload-active">
@@ -692,6 +708,13 @@
       <a class="chip" href="https://www.amazon.com/dp/B0GDY4RRBR" target="_blank" rel="noopener">Amazon Music</a>
       <a class="chip" href="https://linktr.ee/thereal_stallyon" target="_blank" rel="noopener">All Links</a>
     </div>
+    <!-- LATEST RELEASES — auto-fed from YouTube, no hand editing.
+         qi 2026-09-08: "whatever they post is already on the website."
+         Data comes from /data/youtube.json, refreshed every 30 min by
+         com.xen.dcz-yt-feed. The section HIDES ITSELF if the feed is empty or
+         unreachable, so a dead feed shows nothing rather than an empty shell. -->
+    <div class="kicker" style="margin-top:46px">Latest Releases</div>
+    <div class="yt-feed" id="ytFeed" hidden></div>
     <p class="lead" style="margin-top:24px;font-size:14px">Follow <a href="https://instagram.com/thereal_stallyon" target="_blank" rel="noopener">@thereal_stallyon</a> so you don't miss a release.</p>
   </div>
 </section>
@@ -1924,6 +1947,29 @@
     })
     .catch(function(){})
     .then(function(){ try{ d.dispatchEvent(new Event('dcz:content')); }catch(_){} });
+})();
+
+/* Fill the Latest Releases strip from the auto-fed JSON. Fails SILENT-AND-HIDDEN:
+   if the fetch dies or the feed is empty the section stays hidden, because a
+   client site must never show an empty shell where music should be. */
+(function(){
+  var el = document.getElementById('ytFeed');
+  if (!el) return;
+  fetch('/data/youtube.json', {cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (!d || !d.videos || !d.videos.length) return;
+      el.innerHTML = d.videos.slice(0,10).map(function(v){
+        var t = String(v.title||'').replace(/[<>&"]/g, function(c){
+          return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'})[c]; });
+        return '<a class="yt-card" href="'+v.url+'" target="_blank" rel="noopener">'
+             + '<img src="'+v.thumb+'" alt="" loading="lazy">'
+             + '<div class="t">'+t+'</div>'
+             + '<div class="d">'+(v.published||'')+'</div></a>';
+      }).join('');
+      el.hidden = false;
+    })
+    .catch(function(){ /* stay hidden */ });
 })();
 </script>
 </body>
