@@ -474,6 +474,17 @@
 #shows .archive-grid .caption .sub{font-size:9.5px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #shows .archive-grid .flyer img.zoomable{max-height:none;aspect-ratio:3/4;object-fit:cover}
+
+/* LAYOUT-SHIFT GUARD — qi 2026-09-08: "I try to scroll down to the bottom of the
+   page and it don't let me get there."
+   Cause, measured: 35 images render with no declared dimensions, so each one has
+   zero height until it loads, then suddenly takes space. The page grows underneath
+   a finger already scrolling, and the bottom keeps moving away. Reserving the space
+   up front stops the page changing height while it loads. */
+#music .yt-card img{aspect-ratio:16/9}
+#shows .flyer img{aspect-ratio:3/4}
+.f-socials img,.soc img{width:22px;height:22px}
+img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 </style>
 </head>
 <body class="preload-active">
