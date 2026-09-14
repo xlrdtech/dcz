@@ -586,6 +586,29 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
       <button class="btn primary" data-book>Book a Session</button>
       <a class="btn ghost" href="#music">Hear the Sound</a>
     </div>
+    <style>
+      /* HERO FOLLOW CTA — the follow call-to-action, lifted out of the footer so it is
+         visible without scrolling. Reuses the existing .soc tiles (complete PNGs). */
+      .hero-follow{margin:clamp(18px,3.4vw,28px) auto 0;display:flex;flex-direction:column;
+        align-items:center;gap:clamp(8px,1.6vw,12px)}
+      .hero-follow .hf-label{font-family:var(--sans);font-size:clamp(9px,2.2vw,11px);
+        font-weight:600;letter-spacing:.34em;text-transform:uppercase;
+        background:var(--gold-text);-webkit-background-clip:text;background-clip:text;
+        -webkit-text-fill-color:transparent;color:var(--gold-2)}
+      .hero-follow .hf-row{display:flex;flex-wrap:nowrap;justify-content:center;
+        align-items:center;gap:clamp(6px,2vw,14px);max-width:min(420px,92vw)}
+      .hero-follow .hf-row .soc{width:clamp(38px,10.5vw,46px);height:clamp(38px,10.5vw,46px)}
+    </style>
+    <div class="hero-follow reveal" style="--d:540ms">
+      <span class="hf-label">Follow Stal'lyon</span>
+      <div class="hf-row" role="group" aria-label="Follow Stal'lyon &amp; Diamond Cutz Studios">
+        <a class="soc" href="https://instagram.com/thereal_stallyon" target="_blank" rel="noopener" aria-label="Instagram — Stal'lyon" title="@thereal_stallyon"><img src="/assets/icon-instagram.png" alt="Instagram" width="52" height="52"></a>
+        <a class="soc" href="https://www.tiktok.com/@diamondcutzstudios" target="_blank" rel="noopener" aria-label="TikTok — Diamond Cutz Studios" title="@diamondcutzstudios"><img src="/assets/icon-tiktok.png" alt="TikTok" width="52" height="52"></a>
+        <a class="soc" href="https://youtube.com/channel/UCVWGlmy46QEWFU7emMw1MVQ" target="_blank" rel="noopener" aria-label="YouTube — Stal'lyon" title="YouTube"><img src="/assets/icon-youtube.png" alt="YouTube" width="52" height="52"></a>
+        <a class="soc" href="https://open.spotify.com/artist/1VsJvKKQTtX4Muap2vcPt0" target="_blank" rel="noopener" aria-label="Spotify — Stal'lyon" title="Spotify"><img src="/assets/icon-spotify.png" alt="Spotify" width="52" height="52"></a>
+        <a class="soc" href="https://www.facebook.com/share/p/18tKDocTLH/" target="_blank" rel="noopener" aria-label="Facebook — Diamond Cutz Studios" title="Facebook"><img src="/assets/icon-messenger.png" alt="Facebook" width="52" height="52"></a>
+      </div>
+    </div>
   </div>
 </header>
 
