@@ -783,9 +783,11 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
     </div>
     <!-- LATEST RELEASES — auto-fed from YouTube, no hand editing.
          qi 2026-09-08: "whatever they post is already on the website."
-         Data comes from /data/youtube.json, refreshed every 30 min by
-         com.xen.dcz-yt-feed. The section HIDES ITSELF if the feed is empty or
-         unreachable, so a dead feed shows nothing rather than an empty shell. -->
+         ZERO DELAY: read live from app.xlrd.org/feed/youtube (fetched server-side
+         at request time, no-store) and fall back to /data/youtube.json, the file
+         com.xen.dcz-yt-feed refreshes every 30 min, only if the live call fails.
+         The section HIDES ITSELF if both are empty or unreachable, so a dead feed
+         shows nothing rather than an empty shell. -->
     <div class="kicker" style="margin-top:46px">Latest Releases</div>
     <div class="yt-feed" id="ytFeed" hidden></div>
     <p class="lead" style="margin-top:24px;font-size:14px">Follow <a href="https://instagram.com/thereal_stallyon" target="_blank" rel="noopener">@thereal_stallyon</a> so you don't miss a release.</p>
@@ -2028,20 +2030,30 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 (function(){
   var el = document.getElementById('ytFeed');
   if (!el) return;
-  fetch('/data/youtube.json', {cache:'no-store'})
-    .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(d){
-      if (!d || !d.videos || !d.videos.length) return;
-      el.innerHTML = d.videos.slice(0,10).map(function(v){
-        var t = String(v.title||'').replace(/[<>&"]/g, function(c){
-          return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'})[c]; });
-        return '<a class="yt-card" href="'+v.url+'" target="_blank" rel="noopener">'
-             + '<img src="'+v.thumb+'" alt="" loading="lazy">'
-             + '<div class="t">'+t+'</div>'
-             + '<div class="d">'+(v.published||'')+'</div></a>';
-      }).join('');
-      el.hidden = false;
-    })
+  /* LIVE first: server-side YouTube read, no-store, zero delay. A browser cannot
+     read YouTube's RSS directly (no CORS), which is why the 30-min file exists;
+     it stays as the fallback so the strip still fills if the live call dies. */
+  var LIVE = 'https://app.xlrd.org/feed/youtube?channel=UCVWGlmy46QEWFU7emMw1MVQ';
+  var FILE = '/data/youtube.json';
+  function grab(u){
+    return fetch(u, {cache:'no-store'}).then(function(r){ return r.ok ? r.json() : null; });
+  }
+  function render(d){
+    if (!d || !d.videos || !d.videos.length) return false;
+    el.innerHTML = d.videos.slice(0,10).map(function(v){
+      var t = String(v.title||'').replace(/[<>&"]/g, function(c){
+        return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'})[c]; });
+      return '<a class="yt-card" href="'+v.url+'" target="_blank" rel="noopener">'
+           + '<img src="'+v.thumb+'" alt="" loading="lazy">'
+           + '<div class="t">'+t+'</div>'
+           + '<div class="d">'+(v.published||'')+'</div></a>';
+    }).join('');
+    el.hidden = false;
+    return true;
+  }
+  grab(LIVE)
+    .catch(function(){ return null; })
+    .then(function(d){ if (render(d)) return; return grab(FILE).then(render); })
     .catch(function(){ /* stay hidden */ });
 })();
 </script>
