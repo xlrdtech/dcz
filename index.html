@@ -490,11 +490,27 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 <body class="preload-active">
 <div class="env"></div>
 
-<div id="siteLoader" aria-hidden="true">
-  <video id="loaderVid" autoplay muted playsinline preload="auto">
+<div id="siteLoader">
+  <video id="loaderVid" autoplay muted playsinline preload="auto" aria-hidden="true">
     <source src="/assets/loader.mp4" type="video/mp4">
     <source src="/assets/loader.webm" type="video/webm">
   </video>
+  <!-- INTRO FOLLOW CTA (2026-09-14) - the follow call-to-action is MERGED INTO the
+       video intro, not bolted on elsewhere: it rises in over the intro while the clip
+       plays and rides the same glitch-dissolve out. Reuses the site's own .soc tiles
+       and --gold-text. Every handle here is the one already published on this site;
+       the hero and footer rows carry the same set after the intro clears. -->
+  <div id="loaderFollow">
+    <span class="lf-label">Follow Stal&#39;lyon</span>
+    <div class="lf-row" role="group" aria-label="Follow Stal&#39;lyon &amp; Diamond Cutz Studios">
+      <a class="soc" href="https://instagram.com/thereal_stallyon" target="_blank" rel="noopener" aria-label="Instagram &mdash; Stal&#39;lyon" title="@thereal_stallyon"><img src="/assets/icon-instagram.png" alt="Instagram" width="52" height="52"></a>
+      <a class="soc" href="https://www.tiktok.com/@diamondcutzstudios" target="_blank" rel="noopener" aria-label="TikTok &mdash; Diamond Cutz Studios" title="@diamondcutzstudios"><img src="/assets/icon-tiktok.png" alt="TikTok" width="52" height="52"></a>
+      <a class="soc" href="https://youtube.com/channel/UCVWGlmy46QEWFU7emMw1MVQ" target="_blank" rel="noopener" aria-label="YouTube &mdash; Stal&#39;lyon" title="YouTube"><img src="/assets/icon-youtube.png" alt="YouTube" width="52" height="52"></a>
+      <a class="soc" href="https://open.spotify.com/artist/1VsJvKKQTtX4Muap2vcPt0" target="_blank" rel="noopener" aria-label="Spotify &mdash; Stal&#39;lyon" title="Spotify"><img src="/assets/icon-spotify.png" alt="Spotify" width="52" height="52"></a>
+      <a class="soc" href="https://www.facebook.com/share/p/18tKDocTLH/" target="_blank" rel="noopener" aria-label="Facebook &mdash; Diamond Cutz Studios" title="Facebook"><img src="/assets/icon-messenger.png" alt="Facebook" width="52" height="52"></a>
+    </div>
+    <span class="lf-cue">&#10022; tap to follow &#10022;</span>
+  </div>
 </div>
 <style>
   body.preload-active{overflow:hidden}
@@ -502,6 +518,24 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
   #siteLoader{position:fixed;inset:0;z-index:9999;background:#000;
     display:flex;align-items:center;justify-content:center;opacity:1}
   #siteLoader video{width:100%;height:auto;max-height:100vh;object-fit:contain;background:#000}
+  /* INTRO FOLLOW CTA - lives on the intro overlay, anchored to the bottom so it sits
+     in the letterbox rather than over the clip on a phone. 44px min tap targets. */
+  #loaderFollow{position:absolute;left:50%;z-index:2;
+    bottom:calc(clamp(16px,4.5vh,44px) + env(safe-area-inset-bottom,0px));
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+    gap:clamp(8px,1.6vw,12px);max-width:min(460px,92vw);
+    opacity:0;transform:translate(-50%,14px);
+    animation:lfRise .9s cubic-bezier(.2,.7,.25,1) 1.1s both}
+  #loaderFollow .lf-label{font-family:var(--sans);font-size:clamp(9px,2.2vw,11px);
+    font-weight:600;letter-spacing:.34em;text-transform:uppercase;
+    background:var(--gold-text);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:var(--gold-2)}
+  #loaderFollow .lf-row{display:flex;flex-wrap:nowrap;justify-content:center;
+    align-items:center;gap:clamp(6px,2vw,14px)}
+  #loaderFollow .lf-row .soc{width:clamp(44px,11vw,50px);height:clamp(44px,11vw,50px)}
+  #loaderFollow .lf-cue{font-family:var(--sans);font-size:clamp(8px,1.9vw,10px);
+    letter-spacing:.26em;text-transform:uppercase;color:var(--steel)}
+  @keyframes lfRise{to{opacity:1;transform:translate(-50%,0)}}
   /* CINEMATIC GLITCH exit: RGB channel-split shimmer builds into two controlled
      displacement kicks, then dissolves smoothly with scale + fade. Smooth easing,
      not hard steps -> reads as an intentional digital dissolve, not chaos. */
