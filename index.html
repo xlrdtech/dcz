@@ -556,8 +556,15 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
     100% {transform:translate(0,0) scale(1.12);    filter:blur(6px) brightness(1.25);opacity:0}
   }
   @media (prefers-reduced-motion:reduce){
-    #siteLoader{display:none}
-    #siteLoader.loader-out{animation:none;opacity:0}
+    /* The intro is motion-heavy so the VIDEO goes - but the FOLLOW CTA lives inside
+       this overlay, and hiding the whole thing meant reduce-motion visitors never saw
+       a follow prompt at all. Measured 2026-09-14: #loaderFollow 0x0, opacity 0, across
+       7 samples, loader never visible; no cookie/localStorage/sessionStorage gating.
+       Keep the overlay, drop the motion, still show the links. */
+    #siteLoader{display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.92);animation:none}
+    #siteLoader video{display:none}
+    #siteLoader.loader-out{animation:none;opacity:0;pointer-events:none}
+    #loaderFollow{opacity:1 !important;transform:none !important;animation:none !important;transition:none;margin-bottom:14vh}
   }
 </style>
 <script>
