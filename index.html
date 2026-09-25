@@ -662,12 +662,24 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 <script type="importmap">{"imports":{"three":"/lib/three.module.min.js"}}</script>
 <script type="module">
   import * as THREE from 'three';
-  (function(){
+  // qi 2026-09-25 14:47 "when I load it, it just freezes on the diamond". The medallion compiled three
+  // clearcoat physical materials + a PMREM environment WHILE the intro played, then rendered every frame
+  // forever at 2x DPR, even off-screen. On a loaded phone that stalls the page. Same look, cheaper:
+  // start after the intro clears, lighter on phones, pause when hidden/off-screen, fall back to the logo image.
+  var MOBILE=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||window.innerWidth<700;
+  function startCoin(){ if(startCoin.done) return; startCoin.done=true;
+    var go=function(){ coin(); };
+    if(window.requestIdleCallback) requestIdleCallback(go,{timeout:1200}); else setTimeout(go,200);
+  }
+  if(document.documentElement.classList.contains('loader-cleared')) startCoin();
+  else { document.addEventListener('dcz:loader-done', startCoin, {once:true}); setTimeout(startCoin, 7000); }
+  function coin(){
     var host=document.getElementById('hero3d'), canvas=document.getElementById('coin');
     var renderer;
-    try{ renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true,powerPreference:'high-performance'}); }
+    try{ renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:!MOBILE,alpha:true,powerPreference:MOBILE?'default':'high-performance'}); }
     catch(e){ return; }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    canvas.addEventListener('webglcontextlost',function(e){ e.preventDefault(); host.classList.remove('live'); running=false; });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, MOBILE?1.5:2));
     renderer.outputColorSpace=THREE.SRGBColorSpace;
     renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.12;
 
@@ -733,8 +745,15 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
     }
     window.addEventListener('resize',resize); resize();
 
-    (function loop(){
-      requestAnimationFrame(loop);
+    // Render only while the medallion is on screen and the tab is visible.
+    var running=true, onScreen=true;
+    if(window.IntersectionObserver){ new IntersectionObserver(function(es){ onScreen=es[0].isIntersecting; if(onScreen) kick(); }).observe(host); }
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) kick(); });
+    var rafOn=false; function kick(){ if(!rafOn && running){ rafOn=true; requestAnimationFrame(loop); } }
+    function loop(){
+      rafOn=false;
+      if(!running || !onScreen || document.hidden) return;
+      rafOn=true; requestAnimationFrame(loop);
       var t=clock.getElapsedTime();
       if(!dragging){
         rotY+=velY; rotX+=velX; velY*=0.94; velX*=0.94; idle+=0.016;
@@ -745,8 +764,9 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
       pivot.rotation.y=rotY; pivot.rotation.x=rotX;
       glint.position.set(Math.cos(t*1.3)*3.4, Math.sin(t*1.1)*2.2, 3.2);
       renderer.render(scene,camera);
-    })();
-  })();
+    }
+    kick();
+  }
 </script>
 
 <!-- medallion sizing: match the 3D coin's width to the "Cutz Studios" wordmark line (qi 2026-06-24).
