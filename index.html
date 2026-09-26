@@ -436,6 +436,7 @@
 #music .yt-card .t{font-size:12.5px;line-height:1.3;padding:9px 11px 3px;font-weight:600}
 #music .yt-card .d{font-size:10.5px;opacity:.6;padding:0 11px 10px;letter-spacing:.04em}
 #music .yt-card.tt-card img{aspect-ratio:9/16}
+#music .yt-card.ig-card img{aspect-ratio:4/5}
 
 /* ARCHIVE AS A SWIPE STRIP — qi 2026-09-08: "the archive needs to be a small
    horizontal... it could be a gallery" + "they get older" (older = less room).
@@ -865,6 +866,14 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
     <div id="ttWrap" hidden>
       <div class="kicker" style="margin-top:46px">Latest on TikTok</div>
       <div class="yt-feed" id="ttFeed"></div>
+    </div>
+    <!-- LATEST ON INSTAGRAM -- auto-fed, no login, no hand editing (goal dcz-scope).
+         com.xen.dcz-instagram reads his PUBLIC profile embed (instagram.com/thereal_stallyon/embed/),
+         stores each post's cover in /assets/ig/ and the list in /data/instagram.json. No signed IG URL
+         is on this page, so nothing can expire. Hidden unless it fills. -->
+    <div id="igWrap" hidden>
+      <div class="kicker" style="margin-top:46px">Latest on Instagram</div>
+      <div class="yt-feed" id="igFeed"></div>
     </div>
     <p class="lead" style="margin-top:24px;font-size:14px">Follow <a href="https://instagram.com/thereal_stallyon" target="_blank" rel="noopener">@thereal_stallyon</a> so you don't miss a release.</p>
   </div>
@@ -2186,6 +2195,35 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
              + (x.o.title ? '<div class="t">'+esc(x.o.title)+'</div>' : '')
              + '<div class="d">'+esc(x.v.published)+'</div></a>';
       }).join('');
+      wrap.hidden = false;
+    })
+    .catch(function(){ /* stay hidden */ });
+})();
+</script>
+<script>
+/* LATEST ON INSTAGRAM -- /data/instagram.json + /assets/ig covers (com.xen.dcz-instagram).
+   A card whose cover fails to load removes itself; the strip stays hidden if none load. */
+(function(){
+  var wrap = document.getElementById('igWrap'), el = document.getElementById('igFeed');
+  if (!wrap || !el) return;
+  function esc(t){ return String(t||'').replace(/[<>&"]/g, function(c){
+    return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'})[c]; }); }
+  fetch('/data/instagram.json', {cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (!d || !d.posts || !d.posts.length) return;
+      el.innerHTML = d.posts.slice(0,8).map(function(p){
+        return '<a class="yt-card ig-card" href="'+esc(p.url)+'" target="_blank" rel="noopener">'
+             + '<img src="'+esc(p.image)+'" alt="" loading="lazy">'
+             + '<div class="t">'+(p.kind === 'reel' ? 'Reel' : 'Post')+'</div>'
+             + '<div class="d">'+esc(p.published)+'</div></a>';
+      }).join('');
+      var cards = el.querySelectorAll('.ig-card'), shown = cards.length;
+      Array.prototype.forEach.call(cards, function(a){
+        a.querySelector('img').addEventListener('error', function(){
+          a.remove(); if (--shown === 0) wrap.hidden = true;
+        });
+      });
       wrap.hidden = false;
     })
     .catch(function(){ /* stay hidden */ });
