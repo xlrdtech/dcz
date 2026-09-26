@@ -1,0 +1,51 @@
+{
+ "source": "instagram-public-profile-embed",
+ "user": "thereal_stallyon",
+ "fetched": "2026-09-26T02:22:55",
+ "posts_count": 73,
+ "count": 6,
+ "posts": [
+  {
+   "shortcode": "DduOPiCzFle",
+   "kind": "reel",
+   "published": "2026-09-25",
+   "url": "https://www.instagram.com/p/DduOPiCzFle/",
+   "image": "/assets/ig/DduOPiCzFle.jpg"
+  },
+  {
+   "shortcode": "DduNptjThj9",
+   "kind": "reel",
+   "published": "2026-09-25",
+   "url": "https://www.instagram.com/p/DduNptjThj9/",
+   "image": "/assets/ig/DduNptjThj9.jpg"
+  },
+  {
+   "shortcode": "DduCiRiT0wu",
+   "kind": "post",
+   "published": "2026-09-25",
+   "url": "https://www.instagram.com/p/DduCiRiT0wu/",
+   "image": "/assets/ig/DduCiRiT0wu.jpg"
+  },
+  {
+   "shortcode": "DdmV3SCTq1B",
+   "kind": "post",
+   "published": "2026-09-22",
+   "url": "https://www.instagram.com/p/DdmV3SCTq1B/",
+   "image": "/assets/ig/DdmV3SCTq1B.jpg"
+  },
+  {
+   "shortcode": "DdexY45BZNn",
+   "kind": "reel",
+   "published": "2026-09-19",
+   "url": "https://www.instagram.com/p/DdexY45BZNn/",
+   "image": "/assets/ig/DdexY45BZNn.jpg"
+  },
+  {
+   "shortcode": "DdHeAu3TpT9",
+   "kind": "reel",
+   "published": "2026-09-10",
+   "url": "https://www.instagram.com/p/DdHeAu3TpT9/",
+   "image": "/assets/ig/DdHeAu3TpT9.jpg"
+  }
+ ]
+}
