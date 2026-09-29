@@ -77,11 +77,7 @@
   body{background:var(--black);color:var(--ice);font-family:var(--sans);font-weight:300;line-height:1.6;overflow-x:clip}
   a{color:var(--rose-hi);text-decoration:none}
 
-  .env{position:fixed;inset:0;z-index:-1;background:
-    radial-gradient(900px 600px at 50% -8%, rgba(19,37,78,.85), transparent 60%),
-    radial-gradient(700px 500px at 85% 30%, rgba(215,160,138,.10), transparent 55%),
-    radial-gradient(700px 600px at 10% 80%, rgba(120,150,210,.08), transparent 55%),
-    var(--black)}
+  .env{position:fixed;inset:0;z-index:-1;background:#04060c} /* flat black: law — no background wash behind his content */
 
   nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
     padding:13px 22px;backdrop-filter:blur(10px);background:rgba(4,6,12,.55);border-bottom:1px solid var(--line-cool)}
@@ -121,12 +117,7 @@
   header.intro{position:relative;text-align:center;overflow:clip;
     padding:clamp(10px,2.4vw,22px) 20px clamp(40px,7vw,72px);
     display:flex;flex-direction:column;align-items:center}
-  /* a soft rose-gold halo behind the whole hero so the medallion + wordmark read as one stage */
-  header.intro::before{content:"";position:absolute;left:50%;top:-2%;transform:translateX(-50%);
-    width:min(120%,860px);height:min(78vh,640px);z-index:-1;pointer-events:none;
-    background:radial-gradient(ellipse 60% 52% at 50% 38%, rgba(215,160,138,.16), transparent 66%),
-      radial-gradient(ellipse 58% 60% at 50% 30%, rgba(19,37,78,.42), transparent 72%);
-    filter:blur(2px)}
+  /* no hero wash (law: no background/gradient behind his content) — medallion + wordmark stand on flat black */
   .hero-medallion{width:100%;max-width:540px;margin:0 auto}
   .hero-copy{width:100%;max-width:640px;margin:clamp(6px,1.6vw,16px) auto 0;display:flex;flex-direction:column;align-items:center}
   header.intro h1{font-family:var(--serif);font-weight:800;
@@ -184,7 +175,7 @@
   h2{font-family:var(--serif);font-weight:700;font-size:clamp(24px,4.4vw,38px);text-align:center;margin-top:12px;color:var(--plat-hi);text-wrap:balance}
   .lead{max-width:56ch;margin:18px auto 0;text-align:center;color:#bcc6d8;font-size:clamp(15px,3.8vw,16px);text-wrap:pretty}
   .cards{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:42px}
-  .card{flex:1 1 220px;max-width:260px;background:linear-gradient(180deg,rgba(19,37,78,.5),rgba(10,14,28,.6));
+  .card{flex:1 1 220px;max-width:260px;background:var(--glass-fill);
     border:1px solid var(--line-cool);border-radius:16px;padding:26px 22px;position:relative;overflow:hidden;transition:.2s}
   /* keep the 4 studio cards balanced (2×2) instead of a lopsided 3+1 at mid widths */
   @media(min-width:561px) and (max-width:920px){
@@ -228,7 +219,7 @@
   .soon{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);border:1px dashed var(--line-cool);border-radius:999px;padding:4px 10px}
   /* ── premium glass footer ── */
   footer{text-align:center;padding:46px 22px 60px;border-top:1px solid var(--line-cool);position:relative;
-    background:linear-gradient(180deg,rgba(13,27,62,.34),rgba(4,6,12,.6));
+    background:rgba(4,6,12,.9);
     -webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%)}
   footer .f-inner{max-width:680px;margin:0 auto}
   footer .nm{font-family:var(--serif);letter-spacing:.26em;font-size:13px;text-transform:uppercase;
@@ -258,7 +249,7 @@
   .modal-bg[hidden]{display:none}
   /* hyper-real frosted glass booking dialog */
   .modal{position:relative;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;
-    background:linear-gradient(180deg,rgba(28,40,68,.55),rgba(10,14,28,.6));
+    background:linear-gradient(180deg,var(--glass-fill-hi),var(--glass-fill));
     -webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);
     border:1px solid var(--glass-border);border-radius:18px;padding:30px 26px 26px;
     box-shadow:0 30px 80px rgba(0,0,0,.6), var(--glass-inset)}
@@ -283,9 +274,7 @@
     height:clamp(520px,64vh,640px);display:flex;align-items:stretch;justify-content:flex-start;gap:0;
     padding:0;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.6);
     background:
-      radial-gradient(120% 90% at 22% 100%, rgba(19,37,78,.55), transparent 62%),
-      radial-gradient(90% 70% at 80% 18%, rgba(215,160,138,.10), transparent 60%),
-      linear-gradient(180deg, rgba(8,11,22,.7), rgba(4,6,12,.92))}
+      linear-gradient(180deg, rgba(8,11,22,.7), rgba(4,6,12,.92))} /* washes stripped (law) */
   /* transparent cut-out figure: occupies the LEFT, full-height, bottom-aligned, contained
      (head/hat never clipped). parallax via translateY on scroll. No box / no border. */
   .artist .portrait-bg{position:relative;z-index:0;cursor:zoom-in;flex:0 0 46%;align-self:stretch;
@@ -306,7 +295,7 @@
   /* hyper-real frosted glass bio panel sitting over the portrait.
      Sizes to its content (no fixed height) and gets generous top padding so the heading
      line is always fully visible; if it ever exceeds the section it scrolls internally. */
-  .artist .bio{position:relative;z-index:2;flex:1 1 48%;margin:clamp(18px,3vw,30px);text-align:left;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-start;
+  .artist .bio{position:relative;z-index:2;flex:1 1 48%;margin:clamp(18px,3vw,30px);text-align:center;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-start;
     padding:clamp(24px,3vw,38px);border-radius:18px;border:1px solid var(--glass-border);
     overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
     background:linear-gradient(165deg,rgba(244,247,252,.10),rgba(232,238,248,.05));
@@ -328,8 +317,7 @@
        bottom-aligned so he stands on the bio below. The bio grows to fit ALL text. */
     .artist{min-height:auto;height:auto;border-radius:18px;justify-content:center;align-items:center;padding:18px 0 0;flex-direction:column;
       background:
-        radial-gradient(120% 60% at 50% 100%, rgba(19,37,78,.5), transparent 64%),
-        linear-gradient(180deg, rgba(8,11,22,.55), rgba(4,6,12,.92))}
+        linear-gradient(180deg, rgba(8,11,22,.55), rgba(4,6,12,.92))} /* wash stripped (law) */
     .artist .portrait-bg{position:relative;left:auto;top:auto;width:100%;height:auto;min-height:auto;flex-basis:auto}
     /* stacked on mobile: full-width square, feather only the BOTTOM edge into the bio below */
     .artist .portrait-bg img{display:block;width:100%;max-width:none;height:auto;max-height:none;margin:0 auto;object-fit:cover;object-position:center top}
@@ -344,7 +332,7 @@
   .tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:38px}
   @media(max-width:780px){ .tracks{grid-template-columns:repeat(2,1fr)} }
   @media(max-width:480px){ .tracks{grid-template-columns:1fr} }
-  .track{background:linear-gradient(180deg,rgba(19,37,78,.5),rgba(10,14,28,.6));border:1px solid var(--line-cool);
+  .track{background:var(--glass-fill);border:1px solid var(--line-cool);
     border-radius:14px;overflow:hidden;transition:.2s}
   .track:hover{transform:translateY(-3px);border-color:var(--line)}
   /* RECTANGLE media tiles, NO white space: a blurred copy of the same art fills the slot,
@@ -360,7 +348,7 @@
     background:rgba(8,11,22,.55);-webkit-backdrop-filter:blur(6px) saturate(150%);backdrop-filter:blur(6px) saturate(150%);
     border:1px solid rgba(240,196,173,.5);box-shadow:0 6px 16px rgba(0,0,0,.55), var(--glass-inset);
     color:var(--rose-hi);font-size:15px;padding-left:3px;transition:.2s}
-  .track .thumb:hover .play span{transform:scale(1.1);background:rgba(13,27,62,.7);color:#fff;border-color:rgba(240,196,173,.85)}
+  .track .thumb:hover .play span{transform:scale(1.1);background:rgba(215,160,138,.35);color:#fff;border-color:rgba(240,196,173,.85)}
   .track iframe{width:100%;aspect-ratio:16/9;display:block;border:0}
   .track .meta{padding:13px 15px;text-align:center}
   .track .meta h3{font-family:var(--serif);font-weight:600;font-size:15.5px;color:var(--ice);letter-spacing:.02em;text-wrap:balance}
@@ -1235,7 +1223,7 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 <div class="modal-bg" id="bookModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Book Diamond Cutz Studios">
     <button class="modal-x" id="bookClose" aria-label="Close">&times;</button>
-    <div class="kicker" style="text-align:left">Booking</div>
+    <div class="kicker" style="text-align:center">Booking</div>
     <h3 class="m-title">Book Diamond Cutz</h3>
     <p class="m-sub">Tell us what you need and we'll lock in your time. Goes straight to the studio inbox.</p>
     <form id="bookForm">
@@ -1402,7 +1390,7 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 #shows .show:last-child{flex-basis:calc(100% - 8px)}
 
 /* the framed gallery print + caption */
-#shows .poster{position:relative;display:grid;grid-template-rows:auto auto;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,rgba(19,37,78,.55),rgba(10,14,28,.72));-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);box-shadow:var(--glass-inset),0 28px 70px -28px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s,opacity .5s}
+#shows .poster{position:relative;display:grid;grid-template-rows:auto auto;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:var(--glass-fill);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);box-shadow:var(--glass-inset),0 28px 70px -28px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s,opacity .5s}
 #shows .show.is-active .poster{box-shadow:var(--glass-inset),0 34px 86px -26px rgba(0,0,0,.9),0 0 40px -10px rgba(215,160,138,.28),0 0 0 1px rgba(240,196,173,.18)}
 #shows .show:not(.is-active) .poster{opacity:.6;transform:scale(.965)}
 /* rose-gold header hairline = curated-print top rule */
@@ -1413,7 +1401,7 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 #shows .flyer{display:block;position:relative;margin:0;padding:clamp(14px,3.6vw,22px);overflow:hidden;cursor:zoom-in;isolation:isolate;min-height:0}
 #shows .flyer-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transform:scale(1.3);filter:blur(30px) saturate(135%) brightness(.5);opacity:.9}
 /* obsidian/navy vignette over the blurred fill keeps it a "mat", not a busy photo */
-#shows .flyer::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(125% 90% at 50% 0%,rgba(19,37,78,.35),rgba(4,6,12,.86) 86%)}
+#shows .flyer::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(125% 90% at 50% 0%,rgba(0,0,0,.35),rgba(4,6,12,.86) 86%)}
 /* thin rose-gold inner border that frames the print region */
 #shows .flyer::before{content:"";position:absolute;inset:clamp(9px,2.6vw,15px);z-index:3;border-radius:10px;border:1px solid rgba(215,160,138,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);pointer-events:none}
 #shows .flyer img.zoomable{position:relative;z-index:2;display:block;width:100%;height:clamp(380px,64vw,520px);object-fit:contain;border-radius:6px;filter:drop-shadow(0 18px 36px rgba(0,0,0,.6));transition:transform .35s ease}
@@ -1510,7 +1498,7 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 #shows .shows-empty{position:relative;display:block;text-align:center;overflow:hidden;
   margin-top:clamp(26px,5vw,44px);padding:clamp(30px,6vw,46px) clamp(20px,5vw,34px);
   border-radius:20px;border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(19,37,78,.55),rgba(10,14,28,.72));
+  background:var(--glass-fill);
   -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
   box-shadow:var(--glass-inset),0 28px 70px -28px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04)}
 #shows .shows-empty::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;
@@ -1571,12 +1559,10 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
 #shows .tour-flyer{position:relative;display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1fr);
   align-items:stretch;margin:0 auto clamp(26px,4vw,40px);max-width:min(1100px, 92vw);
   max-height:420px;border:1px solid var(--line);border-radius:20px;overflow:hidden;
-  background:linear-gradient(140deg,#101830 0%,#0a0e1c 58%,#160f14 100%);
+  background:#04060c;
   box-shadow:0 26px 70px rgba(0,0,0,.5)}
-#shows .tour-flyer::after{content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 90% at 12% 8%,rgba(224,178,122,.13),transparent 60%)}
-#shows .tf-art{position:relative;min-height:0;overflow:hidden;
-  background:radial-gradient(80% 70% at 50% 100%,rgba(224,178,122,.16),transparent 70%)}
+/* tour-flyer::after wash stripped (law) */
+#shows .tf-art{position:relative;min-height:0;overflow:hidden} /* wash stripped (law) */
 #shows .tf-art img{width:100%;height:100%;object-fit:cover;object-position:50% 8%;display:block}
 #shows .tf-body{padding:clamp(18px,3vw,28px) clamp(16px,3vw,26px);display:flex;flex-direction:column;
   align-items:center;text-align:center;justify-content:center;position:relative;z-index:1}
@@ -1586,7 +1572,7 @@ img[loading="lazy"]:not([width]):not([height]){background:rgba(255,255,255,.03)}
   letter-spacing:.02em;color:var(--ice);margin:0 0 clamp(12px,2vw,18px);line-height:1}
 #shows .tf-dates{list-style:none;margin:0;padding:0;display:grid;gap:9px;width:100%;max-width:340px}
 #shows .tf-dates li{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:baseline;
-  padding-bottom:8px;border-bottom:1px solid var(--line);text-align:left}
+  padding-bottom:8px;border-bottom:1px solid var(--line);text-align:center}
 #shows .tf-dates li:last-child{border-bottom:0;padding-bottom:0}
 /* qi 2026-09-07: "That show should not be as prominent as the current shows."
    The soonest date leads; each later one steps back in weight and opacity, so the
