@@ -1,10 +1,17 @@
 {
  "source": "instagram-public-profile-embed",
  "user": "thereal_stallyon",
- "fetched": "2026-10-14T21:09:08",
- "posts_count": 77,
+ "fetched": "2026-10-16T09:05:03",
+ "posts_count": 78,
  "count": 6,
  "posts": [
+  {
+   "shortcode": "DejLQOdMvk8",
+   "kind": "post",
+   "published": "2026-10-16",
+   "url": "https://www.instagram.com/p/DejLQOdMvk8/",
+   "image": "/assets/ig/DejLQOdMvk8.jpg"
+  },
   {
    "shortcode": "Defu9mMTTxs",
    "kind": "reel",
@@ -39,13 +46,6 @@
    "published": "2026-09-25",
    "url": "https://www.instagram.com/p/DduOPiCzFle/",
    "image": "/assets/ig/DduOPiCzFle.jpg"
-  },
-  {
-   "shortcode": "DduNptjThj9",
-   "kind": "reel",
-   "published": "2026-09-25",
-   "url": "https://www.instagram.com/p/DduNptjThj9/",
-   "image": "/assets/ig/DduNptjThj9.jpg"
   }
  ]
 }
