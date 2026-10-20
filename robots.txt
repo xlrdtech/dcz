@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /edit/
+Disallow: /invoice/
+
+Sitemap: https://diamondcutzstudios.com/sitemap.xml
