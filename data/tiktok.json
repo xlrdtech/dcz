@@ -1,9 +1,14 @@
 {
  "source": "tiktok-public-profile",
  "user": "andremcallister1",
- "fetched": "2026-09-26T01:56:28",
+ "fetched": "2026-11-06T17:49:14",
  "count": 12,
  "videos": [
+  {
+   "id": "7701011442077699359",
+   "published": "2026-10-26",
+   "url": "https://www.tiktok.com/@andremcallister1/video/7701011442077699359"
+  },
   {
    "id": "7689534321274686750",
    "published": "2026-09-25",
@@ -58,11 +63,6 @@
    "id": "7629558076718320926",
    "published": "2026-04-16",
    "url": "https://www.tiktok.com/@andremcallister1/video/7629558076718320926"
-  },
-  {
-   "id": "7629556376989175070",
-   "published": "2026-04-16",
-   "url": "https://www.tiktok.com/@andremcallister1/video/7629556376989175070"
   }
  ]
 }
