@@ -35,6 +35,16 @@ h1{font-family:Cinzel,serif;font-weight:800;font-size:clamp(38px,11vw,58px);lett
 .how h2{font-family:Cinzel,serif;font-weight:600;font-size:14px;letter-spacing:.2em;text-transform:uppercase;margin:0 0 10px;color:var(--chrome)}
 .how p{margin:0 0 8px;font-size:13.5px;color:var(--dim)}
 .how p:last-child{margin:0}
+.promo{width:100%;border:1px solid var(--chrome);border-radius:var(--r);padding:14px;background:rgba(255,255,255,.07)}
+.tag{display:inline-block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#000;background:var(--chrome);border-radius:999px;padding:5px 12px;margin:2px 0 12px}
+.duo{display:flex;flex-direction:column;gap:10px}
+.side{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin:8px 0 4px}
+.backart{width:100%;border-radius:16px;background:#0a0a0c;padding:28px 18px;display:block}
+.backart img{width:100%;height:auto;display:block}
+.pp{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px}
+.pp select{width:100%;max-width:320px;background:#0a0a0c;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:12px 16px;font:inherit;text-align:center}
+.pp button{width:100%;max-width:320px;padding:14px 18px;border-radius:999px;border:0;background:linear-gradient(180deg,#fff,var(--chrome));color:#000;font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.fine{font-size:12px;color:var(--dim);margin:0}
 footer{margin-top:12px;color:var(--dim);font-size:12px;letter-spacing:.06em}
 footer a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
 </style></head><body>
@@ -44,6 +54,38 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom
   <p class="sub">Official Merch &middot; Stal&rsquo;lyon</p>
 
   <div class="glass"><p class="lede">Tees, hoodies and snapbacks carrying the two marks: the Diamond Cutz Studios diamond and the Stal&rsquo;lyon script. Each piece is printed when you order it and shipped straight to your door.</p></div>
+
+  <article class="promo" id="promo-hoodie">
+    <span class="tag">Promo &middot; Order now</span>
+    <h2 class="name" style="margin-top:0">Stal&rsquo;lyon &times; Diamond Cutz Hoodie</h2>
+    <p class="meta">Black pullover hoodie. Stal&rsquo;lyon script on the front, Diamond Cutz Studios diamond on the back.</p>
+    <div class="duo">
+      <p class="side">Front</p>
+      <img class="shot" src="img/stallyon-hoodie.webp" alt="Front: black hoodie with the chrome Stal'lyon script on the chest" width="1000" height="1000">
+      <p class="side">Back print</p>
+      <div class="backart"><img src="img/logo-dcs.webp" alt="Back print: the Diamond Cutz Studios diamond logo" width="640" height="410"></div>
+    </div>
+    <p class="price" style="margin-top:14px">$77.77</p>
+    <form class="pp" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+      <input type="hidden" name="cmd" value="_xclick">
+      <input type="hidden" name="business" value="xlrdtech@gmail.com">
+      <input type="hidden" name="item_name" value="Stal'lyon x Diamond Cutz Promo Hoodie (Stal'lyon front, Diamond Cutz back)">
+      <input type="hidden" name="item_number" value="dcz-promo-hoodie">
+      <input type="hidden" name="amount" value="77.77">
+      <input type="hidden" name="currency_code" value="USD">
+      <input type="hidden" name="no_shipping" value="2">
+      <input type="hidden" name="on0" value="Size">
+      <input type="hidden" name="return" value="https://diamondcutzstudios.com/shop/?paid=1">
+      <input type="hidden" name="cancel_return" value="https://diamondcutzstudios.com/shop/#promo-hoodie">
+      <select name="os0" aria-label="Size" required>
+        <option value="" disabled selected>Choose your size</option>
+        <option>S</option><option>M</option><option>L</option><option>XL</option><option>2XL</option>
+      </select>
+      <button type="submit">Buy with PayPal or card</button>
+      <p class="fine">Secure checkout by PayPal. Pay with your PayPal account or a debit or credit card. Your shipping address is collected at checkout.</p>
+    </form>
+  </article>
+  <div class="glass" id="paid" hidden><p class="lede">Thank you. Your order is in. Your hoodie gets printed and shipped to the address you gave PayPal.</p></div>
 
   <section class="line" aria-label="Diamond Cutz Studios line">
     <img class="logo" src="img/logo-dcs.webp" alt="Diamond Cutz Studios diamond logo" width="640" height="410">
@@ -62,7 +104,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom
     <article class="card">
       <img class="shot" src="img/dcs-snapback.webp" alt="Black snapback with the chrome Diamond Cutz Studios diamond logo on the front" loading="lazy" width="1000" height="1000">
       <h3 class="name">Diamond Cutz Snapback</h3><p class="price">$33.33</p>
-      <p class="meta">Black snapback &middot; one size</p>
+      <p class="meta">Black snapback, flat bill &middot; one size</p>
       <a class="buy off" data-sku="dcs-snapback">Ordering opens soon</a>
     </article>
   </section>
@@ -84,7 +126,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom
     <article class="card">
       <img class="shot" src="img/stallyon-snapback.webp" alt="Black snapback with the chrome Stal'lyon script on the front" loading="lazy" width="1000" height="1000">
       <h3 class="name">Stal&rsquo;lyon Snapback</h3><p class="price">$33.33</p>
-      <p class="meta">Black snapback &middot; one size</p>
+      <p class="meta">Black snapback, flat bill &middot; one size</p>
       <a class="buy off" data-sku="stallyon-snapback">Ordering opens soon</a>
     </article>
   </section>
@@ -101,6 +143,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom
 // ONE switch turns the shop on. When the print-on-demand storefront exists, set STORE to its
 // base URL; every button then links to STORE + "/products/" + its data-sku and reads "Order".
 // Until then the buttons say ordering opens soon and link nowhere, so no one is sent to a dead page.
+if (/[?&]paid=1/.test(location.search)) { var pd = document.getElementById("paid"); pd.hidden = false; pd.scrollIntoView(); }
 var STORE = "";
 if (STORE) {
   document.querySelectorAll(".buy").forEach(function (a) {
