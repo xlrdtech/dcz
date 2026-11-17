@@ -86,7 +86,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom
       <p class="fine">Secure checkout by PayPal. Pay with your PayPal account or a debit or credit card. Your shipping address is collected at checkout.</p>
     </form>
   </article>
-  <div class="glass" id="paid" hidden><p class="lede">Thank you. Your order is in. Your hoodie gets printed and shipped to the address you gave PayPal.</p></div>
+  <div class="glass" id="paid" hidden><p class="lede">Thank you. Your order is in. Your order gets printed and shipped to the address you gave PayPal.</p></div>
 
   <section class="line" aria-label="Diamond Cutz Studios line">
     <img class="logo" src="img/logo-dcs.webp" alt="Diamond Cutz Studios diamond logo" width="640" height="410">
@@ -106,7 +106,19 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom
       <img class="shot" src="img/dcs-snapback.webp" alt="Black snapback with the chrome Diamond Cutz Studios diamond logo on the front" loading="lazy" width="1000" height="1000">
       <h3 class="name">Diamond Cutz Snapback</h3><p class="price">$33.33</p>
       <p class="meta">Black snapback, flat bill &middot; one size</p>
-      <a class="buy off" data-sku="dcs-snapback">Ordering opens soon</a>
+      <form class="ppsnap" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="margin:0">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="xlrdtech@gmail.com">
+        <input type="hidden" name="item_name" value="Diamond Cutz Flat-Bill Snapback (Black)">
+        <input type="hidden" name="item_number" value="dcz-diamond-snapback-black">
+        <input type="hidden" name="amount" value="33.33">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="no_shipping" value="2">
+        <input type="hidden" name="notify_url" value="https://dcz-merch.lord-1e4.workers.dev/paypal/ipn">
+        <input type="hidden" name="return" value="https://diamondcutzstudios.com/shop/?paid=1">
+        <input type="hidden" name="cancel_return" value="https://diamondcutzstudios.com/shop/#dcs-snapback">
+        <button class="buy" type="submit" style="background:transparent;cursor:pointer;width:100%;font-family:inherit">Buy with PayPal or card</button>
+      </form>
     </article>
   </section>
 
@@ -128,7 +140,19 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom
       <img class="shot" src="img/stallyon-snapback.webp" alt="Black snapback with the chrome Stal'lyon script on the front" loading="lazy" width="1000" height="1000">
       <h3 class="name">Stal&rsquo;lyon Snapback</h3><p class="price">$33.33</p>
       <p class="meta">Black snapback, flat bill &middot; one size</p>
-      <a class="buy off" data-sku="stallyon-snapback">Ordering opens soon</a>
+      <form class="ppsnap" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="margin:0">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="xlrdtech@gmail.com">
+        <input type="hidden" name="item_name" value="Stal'lyon Flat-Bill Snapback (Black)">
+        <input type="hidden" name="item_number" value="dcz-stallyon-snapback-black">
+        <input type="hidden" name="amount" value="33.33">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="no_shipping" value="2">
+        <input type="hidden" name="notify_url" value="https://dcz-merch.lord-1e4.workers.dev/paypal/ipn">
+        <input type="hidden" name="return" value="https://diamondcutzstudios.com/shop/?paid=1">
+        <input type="hidden" name="cancel_return" value="https://diamondcutzstudios.com/shop/#stallyon-snapback">
+        <button class="buy" type="submit" style="background:transparent;cursor:pointer;width:100%;font-family:inherit">Buy with PayPal or card</button>
+      </form>
     </article>
   </section>
 
